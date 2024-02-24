@@ -10,6 +10,7 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   email     String?  @db.VarChar(255) @unique
+  name      String?  @db.VarChar(255) @unique
   type      Int    // 1 for employ for volunteer
   clerkId   String?  @db.VarChar(255) @unique
   createdAt DateTime @default(now())
