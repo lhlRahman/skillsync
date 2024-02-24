@@ -12,6 +12,7 @@ model User {
   email     String?  @db.VarChar(255) @unique
   type      Int    // 1 for employ for volunteer
   clerkId   String?  @db.VarChar(255) @unique
+  bio       String?  @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   hoursCompleted    Int     @default(0)
