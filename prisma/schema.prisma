@@ -10,7 +10,8 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   email     String?  @db.VarChar(255) @unique
-  type      Int    // 1 for employer, 2 for volunteer
+  type      Int    // 1 for employ for volunteer
+  clerkId   String?  @db.VarChar(255) @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   postedJobs Job[]   @relation("JobPoster") // For employers: Jobs they've posted
@@ -39,6 +40,10 @@ model Application {
   id        Int      @id @default(autoincrement())
   jobId     Int
   applicantId Int
+  name      String
+  location  String
+  email     String
+  note      String
   job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
   applicant User     @relation(name: "Applicant", fields: [applicantId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
