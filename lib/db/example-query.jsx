@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 export default async function createEvent(day, event) {
   const prisma = new PrismaClient();
@@ -11,10 +11,10 @@ export default async function createEvent(day, event) {
         location: event.location ?? "",
         timeEnd: event.timeEnd ?? "",
         notes: event.notes ?? "",
-        description: event.description ?? ""
-      }
-    })
-    
+        description: event.description ?? "",
+      },
+    });
+
     console.log("Event created:", newEvent);
     return newEvent;
   } catch (error) {
