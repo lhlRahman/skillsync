@@ -34,7 +34,6 @@ model Job {
   endDate     DateTime     @db.Date
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  status      String       @db.VarChar(255)
   acceptedApplicants Int[]
   neededApplicants Int
   requiredHours       Int
