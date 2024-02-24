@@ -32,6 +32,7 @@ model Job {
   status      String       @db.VarChar(255)
   acceptedApplicants Int[]
   neededApplicants Int
+  hours       Int
   posterId    Int          
   poster      User         @relation(name: "JobPoster", fields: [posterId], references: [id], onDelete: Cascade) // Employer who posted the job
   applications Application[]  // Applications from volunteers
