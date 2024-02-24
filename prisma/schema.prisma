@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String?  @db.VarChar(255) @unique
+  type      Int    // 1 for employer, 2 for volunteer
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  postedJobs Job[]   @relation("JobPoster") // For employers: Jobs they've posted
+  appliedJobs Application[] @relation("Applicant") // For volunteers: Jobs they've applied to
+}
+
+model Job {
+  id          Int          @id @default(autoincrement())
+  title       String       @db.VarChar(255)
+  description String?      @db.Text
+  location    String       @db.VarChar(255)
+  categories  String[]     @db.VarChar(255)
+  imageUrl    String?      @db.VarChar(255)
+  startDate   DateTime     @db.Date
+  endDate     DateTime     @db.Date
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  status      String       @db.VarChar(255)
+  posterId    Int          
+  poster      User         @relation(name: "JobPoster", fields: [posterId], references: [id], onDelete: Cascade) // Employer who posted the job
+  applications Application[]  // Applications from volunteers
+}
+
+// New model to represent applications by volunteers to jobs
+model Application {
+  id        Int      @id @default(autoincrement())
+  jobId     Int
+  applicantId Int
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  applicant User     @relation(name: "Applicant", fields: [applicantId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    String   @db.VarChar(255) // e.g., "applied", "accepted", "rejected"
+}
