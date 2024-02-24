@@ -14,6 +14,7 @@ model User {
   clerkId   String?  @db.VarChar(255) @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  hoursCompleted    Int     @default(0)
   postedJobs Job[]   @relation("JobPoster") // For employers: Jobs they've posted
   appliedJobs Application[] @relation("Applicant") // For volunteers: Jobs they've applied to
 }
@@ -32,7 +33,7 @@ model Job {
   status      String       @db.VarChar(255)
   acceptedApplicants Int[]
   neededApplicants Int
-  hours       Int
+  requiredHours       Int
   posterId    Int          
   poster      User         @relation(name: "JobPoster", fields: [posterId], references: [id], onDelete: Cascade) // Employer who posted the job
   applications Application[]  // Applications from volunteers
