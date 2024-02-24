@@ -1,8 +1,13 @@
-"use client";
+// "use client";
 import React from "react";
 import { FloatingNavDemo } from "./ui/floating-navbar";
 import { IconHome, IconMessage, IconUser } from "@tabler/icons-react";
+
+import { auth } from "@clerk/nextjs";
+
 export function FloatingNav() {
+  const user = auth();
+
   const navItems = [
     {
       name: "Home",
@@ -24,8 +29,10 @@ export function FloatingNav() {
   ];
   return (
     <div className="relative  w-full">
-      <FloatingNavDemo navItems={navItems} />
+      <FloatingNavDemo
+        navItems={navItems}
+        authenticated={user.userId != null}
+      />
     </div>
   );
 }
-
