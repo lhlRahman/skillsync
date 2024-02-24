@@ -10,7 +10,9 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   email     String?  @db.VarChar(255) @unique
-  name      String?  @db.VarChar(255) @unique
+  username  String?  @db.VarChar(255) @unique
+  firstName String?  @db.VarChar(255)
+  lastName  String?  @db.VarChar(255)
   type      Int    // 1 for employ for volunteer
   clerkId   String?  @db.VarChar(255) @unique
   createdAt DateTime @default(now())
@@ -45,7 +47,6 @@ model Application {
   id        Int      @id @default(autoincrement())
   jobId     Int
   applicantId Int
-  name      String
   location  String
   email     String
   note      String
