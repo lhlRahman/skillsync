@@ -2,17 +2,17 @@ import { PrismaClient } from "@prisma/client";
 
 export default async function createUser(user) {
   const prisma = new PrismaClient();
-    console.log(user)
   try {
     const newUser = await prisma.user.create({
       data: {
+        email: user.email,
         username: user.username,
+        firstName: user.firstname,
+        lastName: user.lastname,
         type: user.type,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        hoursCompleted: user.hoursCompleted,
-        postedJobs: user.postedJobs,
-        appliedJobs: user.appliedJobs
+        clerkId: user.clerkId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     });
 
