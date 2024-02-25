@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const DataContext = createContext();
 
@@ -13,6 +13,7 @@ export const DataProvider = ({ children }) => {
     appliedJobs: [],
     user: {
       type: 1,
+      bio: "First year computer science student",
     },
   });
   const [sidebarShow, setSidebarShow] = useState(false);
