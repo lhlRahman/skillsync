@@ -4,8 +4,8 @@ import createUser from "@/lib/db/insert-user-query";
 export async function POST(req) {
   if (req.method === "POST") {
     try {
-      const user = req.json();
-      const createduser = createUser(123);
+      const user = await req.json();
+      const createduser = createUser(user);
 
       return NextResponse.json({ status: 201, data: createduser });
     } catch (error) {
