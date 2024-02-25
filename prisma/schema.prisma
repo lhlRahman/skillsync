@@ -28,7 +28,6 @@ model Job {
   title       String       @db.VarChar(255)
   description String?      @db.Text
   location    String       @db.VarChar(255)
-  categories  String[]     @db.VarChar(255)
   imageUrl    String?      @db.VarChar(255)
   startDate   DateTime     @db.Date
   endDate     DateTime     @db.Date
