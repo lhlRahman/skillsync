@@ -10,7 +10,6 @@ export default async function getAllJobsPosted(id) {
       },
     });
 
-    console.log("Job fetched:\n", job);
     return job;
   } catch (error) {
     console.log("Error occurred while fetching jobs", error);
