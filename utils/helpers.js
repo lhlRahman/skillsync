@@ -1,5 +1,6 @@
 import { IoMdDoneAll } from "react-icons/io";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import axios from "axios";
 
 export const createItemUser = ({
   id,
@@ -125,4 +126,62 @@ const Skeleton = ({ image }) => (
 
 export const isUserPoster = (user) => {
   return user && user.type === 2;
+};
+
+export const genetatePrompt = ({
+  description = undefined,
+  bio = undefined,
+}) => {
+  if (bio && description) {
+    return `Given a userBio (in which a person describes activities and experiences they enjoy doing and what particular aspects they they’ve excelled at) and a job description (which is from a volunteer posting), write a note from the perspective of the user to the volunteer poster that demonstrates their good a candidate for the position. It should include points like why they’re excited about the opportunity and why they fit the role. Only generate and return the note from the user perspective. Do not include any other words describing what you have generated:
+    userBio: ${bio}
+    jobDescription: ${description}`;
+  }
+  if (description) {
+    return `Given a brief initial volunteering opportunity description and form values, transform it to be more engaging and friendly, suitable for high school students.  Given the description, add a list of skills as well. These skills should be general skills that a student can use in other jobs, like communication, customer service, public speaking, independent problem solving, creativity, etc). Only generate and return the made volunteer description. Do not include any other words describing what you have generated:${description}`;
+  }
+  return "";
+};
+
+export const rerank = async (arr, query) => {
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_COHERE_API_KEY}`,
+  };
+
+  const data = {
+    model: "rerank-english-v2.0",
+    query: query,
+    documents: arr,
+  };
+  m;
+  return await axios
+    .post("https://api.cohere.ai/v1/rerank", data, { headers })
+    .then((res) => {
+      console.log(res.data);
+      return { success: false, text: err };
+    })
+    .catch((err) => {
+      return { success: false, text: err };
+    });
+};
+
+export const autoCompleteAPI = async (prompt) => {
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_COHERE_API_KEY}`,
+  };
+
+  const data = {
+    prompt: prompt,
+  };
+
+  return await axios
+    .post("https://api.cohere.ai/v1/generate", data, { headers })
+    .then((res) => {
+      return { success: true, text: res.data.generations[0].text };
+    })
+    .catch((err) => {
+      return { success: false, text: err };
+    });
 };
