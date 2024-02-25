@@ -15,6 +15,10 @@ export default function Page() {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    document.title = "SkillSync | Leaderboard";
+  }, []);
+
   return (
     <main
       style={{
