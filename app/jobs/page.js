@@ -160,6 +160,7 @@ export default function Jobs() {
   }, [originalItems]);
 
   useEffect(() => {
+    console.log(data);
     fetchJobs();
   }, [data.user]);
 

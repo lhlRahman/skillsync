@@ -50,8 +50,9 @@ export function UserInputForm() {
 
       // Do we need data for something???
       const newData = await response.json();
+      console.log(newData.data);
       setData({ ...data, user: newData.data });
-      window.location.replace("/jobs");
+      // window.location.replace("/jobs");
     } catch (error) {
       console.error("Error:", error);
     }
