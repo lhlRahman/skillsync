@@ -1,6 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
 
-module.exports.insert = async (user) => {
+export default async function createUser(user) {
   const prisma = new PrismaClient();
     console.log(user)
   try {
@@ -17,6 +17,8 @@ module.exports.insert = async (user) => {
     });
 
     console.log("User created:", newUser);
+
+    return newUser;
   } catch (error) {
     console.log("Error occurred while creating user:", error);
     throw error;
