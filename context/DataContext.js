@@ -12,7 +12,7 @@ export const DataProvider = ({ children }) => {
     postedJobs: [],
     appliedJobs: [],
     user: {
-      type: 1,
+      type: 2,
       bio: "First year computer science student",
     },
   });

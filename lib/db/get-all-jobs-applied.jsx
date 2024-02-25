@@ -19,7 +19,6 @@ export default async function getAllJobsAppliedTo(id) {
             });
         alljobs.push(jobData);
     }
-    console.log("Job fetched:\n", alljobs);
     return alljobs;
 
   } catch (error) {

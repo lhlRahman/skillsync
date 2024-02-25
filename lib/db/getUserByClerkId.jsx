@@ -1,17 +1,18 @@
 
 import { PrismaClient } from "@prisma/client";
 
-export default async function getAllJobsPosted(id) {
+export default async function GetUserByClerkId(clerkId) {
   const prisma = new PrismaClient();
 
   try {
-    const job = await prisma.job.findMany({
+    const job = await prisma.user.findUnique({
         where: {
-          id: id,
+            clerkId: clerkId,
         },
     });
 
-    return job;
+    console.log("user fetched:\n", user);
+    return user;
 
   } catch (error) {
     console.log("Error occurred while fetching jobs", error);

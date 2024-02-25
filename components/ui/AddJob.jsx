@@ -6,6 +6,7 @@ import { MdAutoAwesome } from "react-icons/md";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { autoCompleteAPI, genetatePrompt } from "@/utils/helpers";
 import { useData } from "@/context/DataContext";
+import axios from "axios";
 
 const AddJob = () => {
   const [inputs, setInputs] = useState({});
@@ -25,6 +26,17 @@ const AddJob = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    inputs.location = address;
+    inputs.startDate = new Date(inputs.startDate);
+    inputs.endDate = new Date(inputs.endDate);
+    axios
+      .post("/api/jobs/new", { job: inputs, posterId: data.clerkId })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     console.log(inputs, coordinates, address);
   };
 
