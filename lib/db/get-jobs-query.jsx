@@ -5,7 +5,6 @@ export default async function getJobs() {
 
   try {
     const jobs = await prisma.job.findMany();
-//rerank cohere
     console.log("Jobs fetched:\n", jobs);
     return jobs;
 
