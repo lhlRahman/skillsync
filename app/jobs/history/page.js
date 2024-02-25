@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import styles from "../../../styles/JobsJobPoster.module.scss";
 import JobsTable from "@/components/ui/JobsTable";
 import {
+  CompletedIcon,
+  OnGoingIcon,
   createItemPoster,
   createItemUser,
   isUserPoster,
@@ -53,7 +55,17 @@ const items = [
 
 export default function History() {
   const [originalItems, setOriginalItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [filters, setFilters] = useState([]);
   const { data } = useData();
+
+  const addFilter = (filter) => {
+    setFilters([...filters, filter]);
+  };
+
+  const removeFilter = (filter) => {
+    setFilters(filters.filter((f) => f !== filter));
+  };
 
   const fetchJobs = async () => {
     // const response = await fetch("/api/jobs");
@@ -69,10 +81,56 @@ export default function History() {
     fetchJobs();
   }, []);
 
+  useEffect(() => {
+    if (filters.length === 0) {
+      setFilteredItems(originalItems);
+      return;
+    }
+    setFilteredItems(
+      originalItems.filter(
+        (item) =>
+          (filters.includes("completed") && item.completed) ||
+          (filters.includes("ongoing") && !item.completed)
+      )
+    );
+  }, [filters, originalItems]);
+
   return (
     <main id={styles.jobs}>
       <div className={styles.wrapper}>
-        <JobsTable items={originalItems} />
+        <div className={styles.filters}>
+          <div
+            className={`${styles.filter} ${
+              filters.includes("completed") && styles.active
+            }`}
+            onClick={() => {
+              if (filters.includes("completed")) {
+                removeFilter("completed");
+              } else {
+                addFilter("completed");
+              }
+            }}
+          >
+            <CompletedIcon />
+            <div className={styles.title}>Completed</div>
+          </div>
+          <div
+            className={`${styles.filter} ${
+              filters.includes("ongoing") && styles.active
+            }`}
+            onClick={() => {
+              if (filters.includes("ongoing")) {
+                removeFilter("ongoing");
+              } else {
+                addFilter("ongoing");
+              }
+            }}
+          >
+            <OnGoingIcon />
+            <div className={styles.title}>Ongoing</div>
+          </div>
+        </div>
+        <JobsTable items={filteredItems} />
       </div>
     </main>
   );

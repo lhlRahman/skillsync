@@ -27,7 +27,6 @@ const AutoCompleteInput = ({ setCoordinates, setAddress }) => {
 
       autocomplete.addListener("place_changed", () => {
         const place = autocomplete.getPlace();
-        console.log(place);
         if (!place.geometry) {
           console.log("Returned place contains no geometry");
           return;
