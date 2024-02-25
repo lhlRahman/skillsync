@@ -1,7 +1,11 @@
-import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-
-const inter = Inter({ subsets: ["latin"] });
+"use client";
+import Sidebar from "../../components/Sidebar";
+import SidebarItem from "../../components/SidebarItem";
+import { MdVolunteerActivism } from "react-icons/md";
+import { useData } from "@/context/DataContext";
+import { isUserPoster } from "@/utils/helpers";
+import { FaPlus } from "react-icons/fa";
+import { FaHistory } from "react-icons/fa";
 
 // export const metadata = {
 //   title: "Create Next App",
@@ -9,5 +13,27 @@ const inter = Inter({ subsets: ["latin"] });
 // };
 
 export default function RootLayout({ children }) {
-  return <>{children}</>;
+  const { data } = useData();
+  return (
+    <>
+      <Sidebar show={false}>
+        <SidebarItem
+          title="Jobs"
+          icon="/icons/dashboardIconDark.svg"
+          Icon={MdVolunteerActivism}
+          link="/jobs"
+        />
+        {isUserPoster(data.user) ? (
+          <SidebarItem title="Create Job" Icon={FaPlus} link="/jobs/create" />
+        ) : (
+          <SidebarItem
+            title="Jobs Completed"
+            Icon={FaHistory}
+            link="/jobs/history"
+          />
+        )}
+      </Sidebar>
+      {children}
+    </>
+  );
 }
