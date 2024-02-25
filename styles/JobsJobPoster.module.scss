@@ -1,11 +1,29 @@
 #jobs {
   display: flex;
+  padding-top: 8rem;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
+  .information {
+    gap: 0.25rem;
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .toggleWrapper {
+    display: flex;
+    // flex-direction: column;
+
+    // &:hover {
+    //   .information {
+    //     opacity: 1;
+    //   }
+    // }
+  }
+
   .wrapper {
     padding: 2rem;
-    padding-top: 8rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;

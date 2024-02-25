@@ -7,7 +7,7 @@ export async function GET(req) {
         try {
             console.log("hit api")
             const user = await getUserById(parseInt(userId)); // query db with id`
-
+            console.log("odkf;lkd;kd;flkg;lfk");
             return NextResponse.json({ status: 201, data: user });
         } catch (error) {
             return NextResponse.json({ status: 500 }, { message: `${error}: Internal server error` });
