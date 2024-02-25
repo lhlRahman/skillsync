@@ -6,16 +6,16 @@ export default async function createJob(job, posterId) {
   try {
     const newJob = await prisma.job.create({
       data: {
-        title: job.title ?? "", 
+        title: job.title ?? "",
         description: job.description ?? "",
         location: job.location ?? "",
         imageUrl: job.imageUrl ?? "",
         startDate: job.startDate ?? "",
         endDate: job.endDate ?? "",
-        acceptedApplicants: job.acceptedApplicants ?? "", 
-        neededApplicants: job.neededApplicants ?? "",
-        requiredHours: job.requiredHours ?? "",
-        posterId: posterId ?? "",
+        acceptedApplicants: job.acceptedApplicants ?? [],
+        neededApplicants: parseInt(job.neededApplicants) ?? "",
+        requiredHours: parseInt(job.requiredHours) ?? "",
+        posterId: parseInt(posterId) ?? 0,
       },
     });
 

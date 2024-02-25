@@ -7,7 +7,7 @@ import { isUserPoster } from "@/utils/helpers";
 import { FaPlus } from "react-icons/fa";
 import { FaHistory } from "react-icons/fa";
 import ApplyModal from "@/components/ui/ApplyModal";
-import { useState } from "react";
+import { MdLeaderboard } from "react-icons/md";
 
 // export const metadata = {
 //   title: "Create Next App",
@@ -31,11 +31,18 @@ export default function RootLayout({ children }) {
         {isUserPoster(data.user) ? (
           <SidebarItem title="Create Job" Icon={FaPlus} link="/jobs/create" />
         ) : (
-          <SidebarItem
-            title="Jobs Completed"
-            Icon={FaHistory}
-            link="/jobs/history"
-          />
+          <>
+            <SidebarItem
+              title="Leaderboard"
+              Icon={MdLeaderboard}
+              link="/jobs/leaderboard"
+            />
+            <SidebarItem
+              title="Jobs Completed"
+              Icon={FaHistory}
+              link="/jobs/history"
+            />
+          </>
         )}
       </Sidebar>
       {children}
