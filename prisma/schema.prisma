@@ -4,7 +4,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model User {
@@ -17,6 +18,7 @@ model User {
   clerkId   String?  @db.VarChar(255) @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  bio      String?   @db.Text
   hoursCompleted    Int     @default(0)
   postedJobs Job[]   @relation("JobPoster") // For employers: Jobs they've posted
   appliedJobs Application[] @relation("Applicant") // For volunteers: Jobs they've applied to
@@ -32,11 +34,11 @@ model Job {
   endDate     DateTime     @db.Date
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  status      String       @db.VarChar(255)
   acceptedApplicants Int[]
   neededApplicants Int
   requiredHours       Int
-  posterId    Int          
+  posterId    Int    
+  completed   Boolean      @default(false)      
   poster      User         @relation(name: "JobPoster", fields: [posterId], references: [id], onDelete: Cascade) // Employer who posted the job
   applications Application[]  // Applications from volunteers
 }
