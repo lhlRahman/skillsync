@@ -7,7 +7,7 @@ export default function Home() {
   }, []);
   return (
     <>
-      <MacbookScroll src="https://vastphotos.com/files/uploads/social/good-morning-new-york.jpg" />
+      <MacbookScroll src="/01.png" />
     </>
   );
 }

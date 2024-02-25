@@ -79,7 +79,8 @@ export const MacbookScroll = ({
       >
         {title || (
           <span>
-            AI-Powered Matches for Meaningful Impact. <br />SkillSync Volunteer.
+            AI-Powered Matches for Meaningful Impact. <br />
+            SkillSync Volunteer.
           </span>
         )}
       </motion.h2>
@@ -148,8 +149,7 @@ export const Lid = ({
           }}
           className="absolute inset-0 bg-[#010101] rounded-lg flex items-center justify-center"
         >
-          <span className="text-white">
-          </span>
+          <span className="text-white"></span>
         </div>
       </div>
       <motion.div
@@ -168,6 +168,7 @@ export const Lid = ({
           src={src as string}
           alt="aceternity logo"
           fill
+          style={{ objectFit: "contain" }}
           className="object-cover object-left-top absolute rounded-lg inset-0 h-full w-full"
         />
       </motion.div>
@@ -643,4 +644,3 @@ export const OptionKey = ({ className }: { className: string }) => {
     </svg>
   );
 };
-

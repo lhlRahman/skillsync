@@ -5,7 +5,7 @@ const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [data, setData] = useState({
-    clerkId: "",
+    clerkId: "user_2crj4lmkxPATEEI572l8gGwjqhH",
     title: "",
     description: "",
     type: 0,
