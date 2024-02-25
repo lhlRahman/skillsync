@@ -13,6 +13,7 @@ export async function POST(req) {
      // create them off the start date
       const jobs = await getJobs(posterId);
 
+      
       return NextResponse.json({ status: 201, data: jobs });
     } catch (error) {
       return NextResponse.json({ status: 500 }, { message: `${error}: Internal server error`});
