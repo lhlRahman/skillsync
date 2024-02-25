@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import getJobs from '@/lib/db/get-jobs-query';
 import cohereRank from '@/utils/rerank';
 
-// POST /api/days/new
-// Required fields in body: { Day object } - I think?
 export async function GET(req) {
   if (req.method === "GET") {
     try {
