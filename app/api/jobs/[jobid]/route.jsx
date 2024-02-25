@@ -5,7 +5,6 @@ export async function GET(req) {
     const jobId = req.nextUrl.pathname.split("/api/jobs/")[1];
     if (req.method === "GET") {
         try {
-            console.log("hit api")
             const jobs = await getJobById(parseInt(jobId)); // query db with id`
 
             return NextResponse.json({ status: 201, data: jobs });

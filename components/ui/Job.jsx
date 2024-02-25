@@ -5,60 +5,61 @@ import Link from "next/link";
 import { isUserPoster } from "@/utils/helpers";
 import { useData } from "@/context/DataContext";
 import { useEffect, useState } from "react";
+import { getJob } from "@/lib/api";
 
 // Placeholder for fake data, replace this with actual data fetching mechanism
-const fakeJob = {
-  id: 1,
-  title: "Software Engineer",
-  description:
-    "We are looking for a skilled software engineer to join our team. The ideal candidate will have a strong understanding of software development principles, excellent problem-solving skills, and a passion for creating high-quality software. They will be responsible for designing, developing, and maintaining software solutions that meet our business needs. This includes collaborating with other team members to define software requirements, writing clean and efficient code, and testing and debugging software applications. The successful candidate will also be committed to continuous learning and professional development.",
-  location: "New York, NY",
-  imageUrl:
-    "https://vastphotos.com/files/uploads/social/good-morning-new-york.jpg", // Use dynamic URL here
-  startDate: "2023-01-01",
-  endDate: "2023-12-31",
-  createdAt: "2022-12-01",
-  updatedAt: "2023-01-02",
-  neededApplicants: 5,
-  requiredHours: 40,
-  completed: false,
-  accpetedApplications: [
-    {
-      user: {
-        id: 2,
-        firstname: "Linda",
-        lastname: "Smith",
-      },
-      note: "I have 5 years of experience in software development.",
-    },
-  ],
-  applications: [
-    {
-      user: {
-        id: 1,
-        firstname: "John",
-        lastname: "Doe",
-      },
-      note: "I have 5 years of experience in software development.",
-    },
-  ],
+// const fakeJob = {
+//   id: 1,
+//   title: "Software Engineer",
+//   description:
+//     "We are looking for a skilled software engineer to join our team. The ideal candidate will have a strong understanding of software development principles, excellent problem-solving skills, and a passion for creating high-quality software. They will be responsible for designing, developing, and maintaining software solutions that meet our business needs. This includes collaborating with other team members to define software requirements, writing clean and efficient code, and testing and debugging software applications. The successful candidate will also be committed to continuous learning and professional development.",
+//   location: "New York, NY",
+//   imageUrl:
+//     "https://vastphotos.com/files/uploads/social/good-morning-new-york.jpg", // Use dynamic URL here
+//   startDate: "2023-01-01",
+//   endDate: "2023-12-31",
+//   createdAt: "2022-12-01",
+//   updatedAt: "2023-01-02",
+//   neededApplicants: 5,
+//   requiredHours: 40,
+//   completed: false,
+//   accpetedApplications: [
+//     {
+//       user: {
+//         id: 2,
+//         firstname: "Linda",
+//         lastname: "Smith",
+//       },
+//       note: "I have 5 years of experience in software development.",
+//     },
+//   ],
+//   applications: [
+//     {
+//       user: {
+//         id: 1,
+//         firstname: "John",
+//         lastname: "Doe",
+//       },
+//       note: "I have 5 years of experience in software development.",
+//     },
+//   ],
   // Assuming poster details and applications will be fetched or included as needed
-};
+// };
 
 const Job = () => {
-  const { jobid } = useParams();
+  const { jobId } = useParams();
   const { data, setShowModal, setCurJob } = useData();
   const [job, setJob] = useState({});
 
-  const fetchJob = async (jobid) => {
-    // Fetch job details using jobid
-    setJob(fakeJob);
-  };
-
   useEffect(() => {
-    // Fetch job details using jobid
-    fetchJob(jobid);
-  }, []);
+    const fetchJob = async () => {
+      const newJob = await getJob(jobId);
+      setJob(newJob);
+    }
+    fetchJob()
+  }, [])
+
+
 
   // Formatting dates for display
   const formatDate = (dateString) => new Date(dateString).toLocaleDateString();

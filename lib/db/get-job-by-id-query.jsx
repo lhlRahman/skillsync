@@ -10,7 +10,6 @@ export default async function getJobById(id) {
         },
     });
 
-    console.log("Job fetched:\n", job);
     return job;
 
   } catch (error) {
