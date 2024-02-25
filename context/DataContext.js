@@ -17,6 +17,8 @@ export const DataProvider = ({ children }) => {
   });
   const [sidebarShow, setSidebarShow] = useState(false);
   const [activeSidebar, setActiveSidebar] = useState("jobs");
+  const [showModal, setShowModal] = useState(false);
+  const [curJob, setCurJob] = useState({});
 
   return (
     <DataContext.Provider
@@ -27,6 +29,10 @@ export const DataProvider = ({ children }) => {
         sidebarShow,
         activeSidebar,
         setActiveSidebar,
+        showModal,
+        setShowModal,
+        curJob,
+        setCurJob,
       }}
     >
       {children}

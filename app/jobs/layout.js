@@ -6,6 +6,8 @@ import { useData } from "@/context/DataContext";
 import { isUserPoster } from "@/utils/helpers";
 import { FaPlus } from "react-icons/fa";
 import { FaHistory } from "react-icons/fa";
+import ApplyModal from "@/components/ui/ApplyModal";
+import { useState } from "react";
 
 // export const metadata = {
 //   title: "Create Next App",
@@ -14,8 +16,11 @@ import { FaHistory } from "react-icons/fa";
 
 export default function RootLayout({ children }) {
   const { data } = useData();
+  const { showModal, setShowModal, job } = useData();
+
   return (
     <>
+      <ApplyModal show={showModal} setShow={setShowModal} job={job} />
       <Sidebar show={false}>
         <SidebarItem
           title="Jobs"

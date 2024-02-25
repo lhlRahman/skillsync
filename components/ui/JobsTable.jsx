@@ -17,6 +17,7 @@ export default function JobsTable({ items }) {
           completed={item.completed}
           neededApplicants={item.neededApplicants}
           acceptedApplicants={item.acceptedApplicants}
+          id={item.data.id}
         />
       ))}
     </BentoGrid>
