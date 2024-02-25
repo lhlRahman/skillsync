@@ -1,8 +1,27 @@
+
+# Skill Sync
+
+## A platform that connects volunteers to those needing volunteers
+
+Using Cohere AI technology, our platform simplifies and personalizes search for volunteering opportunities to give volunteers the power to pursue specific roles and enhance their skill sets.
+
+When volunteers sign up for the platform, they create an entry about past experiences they’ve enjoyed and excelled at (whether that’s from a school team, club or hobby).
+Using these short entries and the Cohere Rerank API, which uses Semantic Searching to query big data, volunteers can view postings through two different priorities. They can either prioritize roles that match their current skill set and will allow them to strengthen them, or they can prioritize roles that introduce new skills they might’ve not yet had the opportunity to acquire.
+Then when applying to a volunteer posting, these entries are used in conjunction with the job descriptions to generate starting applications that can be built off and altered.
+
+As well for those in need of volunteers, they can write simple volunteer role descriptions, which can then be enhanced for their actual postings. These enhanced postings introduce details and enthusiasm, making them more attractive to potential volunteers.
+
+## Through the power of volunteer work, we will not just better our cities, but give youth in cities the opportunities to expand their skill sets.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Deployment
 
-First, run the development server:
+Our app is available at [skillsync-three.vercel.app](https://skillsync-three.vercel.app/)
+
+# Run locally
+
+Run the development server:
 
 ```bash
 npm run dev
@@ -15,22 +34,3 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
