@@ -154,14 +154,13 @@ export const rerank = async (arr, query) => {
     query: query,
     documents: arr,
   };
-  m;
   return await axios
     .post("https://api.cohere.ai/v1/rerank", data, { headers })
     .then((res) => {
-      console.log(res.data);
-      return { success: false, text: err };
+      return { success: true, results: res.data.results };
     })
     .catch((err) => {
+      console.log(err);
       return { success: false, text: err };
     });
 };
