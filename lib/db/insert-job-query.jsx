@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-export default async function createJob(job) {
+export default async function createJob(job, posterId) {
   const prisma = new PrismaClient();
 
   try {
@@ -15,7 +15,7 @@ export default async function createJob(job) {
         acceptedApplicants: job.acceptedApplicants ?? "", 
         neededApplicants: job.neededApplicants ?? "",
         requiredHours: job.requiredHours ?? "",
-        posterId: job.posterId ?? "",
+        posterId: posterId ?? "",
       },
     });
 

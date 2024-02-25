@@ -8,12 +8,14 @@ import {
   createItemPoster,
   createItemUser,
   isUserPoster,
+  rerank,
 } from "../../utils/helpers";
 import { useData } from "@/context/DataContext";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const items = [
   {
-    id: "1",
+    id: "0",
     title: "black lives matter",
     description: "I love black people",
     location: "New York, NY",
@@ -35,7 +37,7 @@ const items = [
   {
     id: "1",
     title: "black lives matter",
-    description: "I love black people",
+    description: "a",
     location: "New York, NY",
     categories: '["Social Justice", "Community"]',
     imageUrl: "",
@@ -58,6 +60,7 @@ export default function Jobs() {
   const [filteredItems, setFilteredItems] = useState([]);
   const [filters, setFilters] = useState([]);
   const { data } = useData();
+  const [loading, setLoading] = useState(true);
 
   const addFilter = (filter) => {
     setFilters([...filters, filter]);
@@ -76,6 +79,32 @@ export default function Jobs() {
       setOriginalItems(items.map(createItemUser));
     }
   };
+
+  const sortBasedOnRerank = async () => {
+    setLoading(true);
+    const response = await rerank(
+      originalItems.map((each) => each.description),
+      data.user.bio
+    );
+    let copy = [...originalItems];
+
+    copy.forEach((obj, index) => {
+      obj["newSortIndex"] = response.results[index].index;
+    });
+
+    copy = copy.sort((a, b) => a.newSortIndex - b.newSortIndex);
+
+    copy.forEach((item) => delete item.newSortIndex);
+
+    setFilteredItems(copy);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (originalItems.length > 0) {
+      sortBasedOnRerank();
+    }
+  }, [originalItems]);
 
   useEffect(() => {
     fetchJobs();
@@ -97,44 +126,53 @@ export default function Jobs() {
 
   return (
     <main id={styles.jobs}>
-      <div className={styles.wrapper}>
-        <div
-          className={styles.filters}
-          style={{ display: isUserPoster(data.user) ? "flex" : "none" }}
-        >
-          <div
-            className={`${styles.filter} ${
-              filters.includes("completed") && styles.active
-            }`}
-            onClick={() => {
-              if (filters.includes("completed")) {
-                removeFilter("completed");
-              } else {
-                addFilter("completed");
-              }
-            }}
-          >
-            <CompletedIcon />
-            <div className={styles.title}>Completed</div>
-          </div>
-          <div
-            className={`${styles.filter} ${
-              filters.includes("ongoing") && styles.active
-            }`}
-            onClick={() => {
-              if (filters.includes("ongoing")) {
-                removeFilter("ongoing");
-              } else {
-                addFilter("ongoing");
-              }
-            }}
-          >
-            <OnGoingIcon />
-            <div className={styles.title}>Ongoing</div>
-          </div>
+      {loading && (
+        <div className="flex items-center gap-3 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-5 bg-green-200 rounded">
+          <AiOutlineLoading3Quarters className="animate-spin text-xl" />
+          <p>Personalizing your job feed based on your bio...</p>
         </div>
-        <JobsTable items={filteredItems} />
-      </div>
+      )}
+
+      {!loading && (
+        <div className={styles.wrapper}>
+          <div
+            className={styles.filters}
+            style={{ display: isUserPoster(data.user) ? "flex" : "none" }}
+          >
+            <div
+              className={`${styles.filter} ${
+                filters.includes("completed") && styles.active
+              }`}
+              onClick={() => {
+                if (filters.includes("completed")) {
+                  removeFilter("completed");
+                } else {
+                  addFilter("completed");
+                }
+              }}
+            >
+              <CompletedIcon />
+              <div className={styles.title}>Completed</div>
+            </div>
+            <div
+              className={`${styles.filter} ${
+                filters.includes("ongoing") && styles.active
+              }`}
+              onClick={() => {
+                if (filters.includes("ongoing")) {
+                  removeFilter("ongoing");
+                } else {
+                  addFilter("ongoing");
+                }
+              }}
+            >
+              <OnGoingIcon />
+              <div className={styles.title}>Ongoing</div>
+            </div>
+          </div>
+          <JobsTable items={filteredItems} />
+        </div>
+      )}
     </main>
   );
 }
