@@ -1,18 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useData } from "@/context/DataContext";
 
 export function UserInputForm() {
+  const { data, setData } = useData();
   const [user, setUser] = useState({
     email: "",
     username: "",
     firstName: "",
     lastName: "",
     bio: "",
-    type: 0, // 0: not selected, 1: volunteer, 2: employer
+    type: 1, // 1: volunteer, 2: employer
   });
 
   // Function to handle setting user type
@@ -21,7 +23,6 @@ export function UserInputForm() {
       ...prevState,
       type: type,
     }));
-    console.log(user);
   };
 
   const handleInputChange = (e) => {
@@ -29,11 +30,11 @@ export function UserInputForm() {
       ...user,
       [e.target.name]: e.target.value,
     });
-    console.log(user);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    user.clerkId = data.clerkId;
     try {
       const response = await fetch("/api/users/create", {
         method: "POST",
@@ -48,8 +49,9 @@ export function UserInputForm() {
       }
 
       // Do we need data for something???
-      const data = await response.json();
-      console.log(data);
+      const newData = await response.json();
+      setData({ ...data, user: newData.data });
+      window.location.replace("/jobs");
     } catch (error) {
       console.error("Error:", error);
     }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -8,11 +8,14 @@ import {
 } from "framer-motion";
 import { cn } from "@/utils/cn";
 import Link from "next/link";
+import { useData } from "@/context/DataContext";
+import axios from "axios";
 
 export const FloatingNavDemo = ({
   navItems,
   className,
   authenticated,
+  userId,
 }: {
   navItems: {
     name: string;
@@ -21,8 +24,10 @@ export const FloatingNavDemo = ({
   }[];
   className?: string;
   authenticated: boolean;
+  userId: any;
 }) => {
   const { scrollYProgress } = useScroll();
+  const { data, setData } = useData();
 
   const [visible, setVisible] = useState(false);
 
@@ -42,6 +47,23 @@ export const FloatingNavDemo = ({
       }
     }
   });
+
+  useEffect(() => {
+    // const interval = setInterval(() => {
+    //   if (!(data.clerkId && data.clerkId.length > 0)) {
+    //     setData({ ...data, clerkId: userId });
+    //   }
+    // }, 500);
+    setData({ ...data, clerkId: userId });
+
+    if (!userId || data.user.type) return;
+    axios
+      .get(`/api/users/getclerk/${userId}`)
+      .then((res) => {
+        setData({ ...data, user: res.data.data });
+      })
+      .catch((err) => {});
+  }, [userId]);
 
   return (
     <AnimatePresence mode="wait">

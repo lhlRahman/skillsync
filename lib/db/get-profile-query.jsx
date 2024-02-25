@@ -9,7 +9,6 @@ export default async function getUserByID(id) {
         id: id,
       },
     });
-    console.log("User fetched", user);
     return user;
   } catch (error) {
     console.log("Error occurred while fetching user", error);

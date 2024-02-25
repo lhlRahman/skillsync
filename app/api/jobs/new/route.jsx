@@ -8,7 +8,6 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   if (req.method === "POST") {
     const { job, posterId } = await req.json();
-    console.log(job, posterId);
 
     try {
       const newJob = await createJob(job, posterId);
