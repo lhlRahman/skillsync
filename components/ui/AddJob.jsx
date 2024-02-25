@@ -1,12 +1,19 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import AutoCompleteInput from "./AutoCompleteInput";
+import { MdAutoAwesome } from "react-icons/md";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { autoCompleteAPI, genetatePrompt } from "@/utils/helpers";
+import { useData } from "@/context/DataContext";
 
 const AddJob = () => {
   const [inputs, setInputs] = useState({});
   const [coordinates, setCoordinates] = useState([]);
   const [address, setAddress] = useState("");
+  const descriptionRef = useRef(null);
+  const { data } = useData();
+  const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -19,6 +26,20 @@ const AddJob = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     console.log(inputs, coordinates, address);
+  };
+
+  const cohereAutoComplete = async () => {
+    setLoading(true);
+    const prompt = genetatePrompt({
+      description: inputs.description,
+    });
+
+    const response = await autoCompleteAPI(prompt);
+    if (response.success === true) {
+      setInputs({ ...inputs, description: response.text });
+      descriptionRef.current.value = response.text;
+    }
+    setLoading(false);
   };
 
   return (
@@ -51,13 +72,31 @@ const AddJob = () => {
 
           <div className="text-gray-700">
             <p className="space-y-2">
-              <span className="block">
+              <span className="block relative">
                 <textarea
+                  ref={descriptionRef}
                   className="w-full h-32 p-2 border border-gray-300 rounded-md"
-                  placeholder="Description"
+                  placeholder="Description (You can use the auto complete button to get a description based on a brief description)"
                   name="description"
                   onChange={onChange}
                 />
+                <span
+                  style={{
+                    position: "absolute",
+                    right: "1rem",
+                    bottom: "1rem",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  <MdAutoAwesome
+                    className={`cursor-pointer ${loading && "hidden"}`}
+                    style
+                    onClick={cohereAutoComplete}
+                  />
+                  <AiOutlineLoading3Quarters
+                    className={`animate-spin ${!loading && "hidden"}`}
+                  />
+                </span>
               </span>
               <span className="block">
                 <AutoCompleteInput
@@ -115,7 +154,7 @@ const AddJob = () => {
               </span>
               <button
                 type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
                 Submit
               </button>
