@@ -1,18 +1,16 @@
-// eampel
-
-import createAllDays from '@/lib/createAllDays';
 import { NextResponse } from 'next/server';
+import getUsers from '@/lib/db/leaderboard-query';
 
 // POST /api/days/new
 // Required fields in body: { Day object } - I think?
-export async function POST(req) {
-  if (req.method === "POST") {
-    const {trip} = await req.json();
+export async function GET(req) {
+  if (req.method === "GET") {
     try {
+      console.log("hit api")
      // create them off the start date
-      const newDays = await createAllDays(trip);
+      const top10 = await getUsers();
 
-      return NextResponse.json({ status: 201, data: newDays });
+      return NextResponse.json({ status: 201, data: top10 });
     } catch (error) {
       return NextResponse.json({ status: 500 }, { message: `${error}: Internal server error`});
     }
