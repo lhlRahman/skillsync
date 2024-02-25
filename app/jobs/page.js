@@ -53,7 +53,7 @@ const items = [
   },
 ];
 
-export default function jobs() {
+export default function Jobs() {
   const [originalItems, setOriginalItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [filters, setFilters] = useState([]);
