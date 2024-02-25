@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
           Icon={MdVolunteerActivism}
           link="/jobs"
         />
-        {data.user.type && isUserPoster(data.user) ? (
+        {data.user && data.user.type && isUserPoster(data.user) ? (
           <SidebarItem title="Create Job" Icon={FaPlus} link="/jobs/create" />
         ) : (
           <>

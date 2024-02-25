@@ -62,7 +62,7 @@ export default function Jobs() {
   const [filteredItems, setFilteredItems] = useState([]);
   const [filters, setFilters] = useState([]);
   const { data } = useData();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [toggle, setToggle] = useState(false);
 
@@ -84,8 +84,6 @@ export default function Jobs() {
   };
 
   const fetchJobs = async () => {
-    console.log("fetch");
-    // TODO
     if (isUserPoster(data.user)) {
       const response = await axios
         .post("/api/jobs/getAllJobsPosted", { id: data.user.id })
@@ -98,8 +96,9 @@ export default function Jobs() {
       setOriginalItems(response.map(createItemPoster));
     } else {
       const response = await axios
-        .post("/api/jobs/getAllAppliedTo", { id: data.user.id })
+        .get("/api/jobs")
         .then((res) => {
+          console.log(res.data.data);
           return res.data.data;
         })
         .catch((err) => {

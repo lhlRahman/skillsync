@@ -10,6 +10,7 @@ import {
   isUserPoster,
 } from "../../../utils/helpers";
 import { useData } from "@/context/DataContext";
+import axios from "axios";
 
 const items = [
   {
@@ -67,13 +68,33 @@ export default function History() {
     setFilters(filters.filter((f) => f !== filter));
   };
 
+  useEffect(() => {
+    document.title = "SkillSync | Jobs History";
+  }, []);
+
   const fetchJobs = async () => {
-    // const response = await fetch("/api/jobs");
-    // const data = await response.json();
     if (isUserPoster(data.user)) {
-      setOriginalItems(items.map(createItemPoster));
+      const response = await axios
+        .post("/api/jobs/getAllJobsPosted", { id: data.user.id })
+        .then((res) => {
+          return res.data.data;
+        })
+        .catch((err) => {
+          return [];
+        });
+      setOriginalItems(response.map(createItemPoster));
     } else {
-      setOriginalItems(items.map(createItemUser));
+      const response = await axios
+        .post("/api/jobs/getAllAppliedTo", { id: data.user.id })
+        .then((res) => {
+          console.log(res.data.data);
+          return res.data.data;
+        })
+        .catch((err) => {
+          console.log(err);
+          return [];
+        });
+      setOriginalItems(response.map(createItemPoster));
     }
   };
 

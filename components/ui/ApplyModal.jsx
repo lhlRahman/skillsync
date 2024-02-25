@@ -5,6 +5,7 @@ import { MdAutoAwesome } from "react-icons/md";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { autoCompleteAPI, genetatePrompt } from "@/utils/helpers";
 import { useData } from "@/context/DataContext";
+import axios from "axios";
 
 export default function ApplyModal({ show, setShow, job }) {
   const [inputs, setInputs] = useState({});
@@ -36,10 +37,27 @@ export default function ApplyModal({ show, setShow, job }) {
     setLoading(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(inputs);
+    inputs.job = { id: job.id, location: job.location };
+    inputs.applicant = {
+      id: data.user.id,
+      email: data.user.email,
+      note: inputs.note,
+    };
+
+    const response = await axios
+      .post(`/api/apply`, inputs)
+      .then((res) => {
+        return res.data.data;
+      })
+      .catch((err) => {
+        return {};
+      });
+    console.log(response);
     setShow(false);
+    window.location.replace("/jobs");
   };
   return (
     <div id={styles.applyModal} className={`${show ? styles.show : ""}`}>

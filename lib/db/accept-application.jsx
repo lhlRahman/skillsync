@@ -2,8 +2,6 @@ import { PrismaClient } from "@prisma/client";
 
 export default async function acceptedApplication(id) {
   const prisma = new PrismaClient();
-  console.log("hit db")
-
   /*
   model Application {
   id        Int      @id @default(autoincrement())
@@ -19,36 +17,29 @@ export default async function acceptedApplication(id) {
   status    String   @db.VarChar(255) // e.g., "applied", "accepted", "rejected"
 }
   */
-
   try {
     const users = await prisma.application.update({
-        where: {
-            id: id,
-        },
-        data: {
-            status: "accepted",
-        },
-    })
-
+      where: {
+        id: id,
+      },
+      data: {
+        status: "accepted",
+      },
+    });
+    console.log("Users fetched:\n", users);
     const updatedApplication = await prisma.job.update({
-        where: {
-            id: users.id,
+      where: {
+        id: users.jobId,
+      },
+      data: {
+        acceptedApplicants: {
+          push: users.id,
         },
-        data: {
-            acceptedApplicants: {
-                connect: {
-                    id: users.id,
-                },
-            },
-        },
-        }); 
-
-
-
+      },
+    });
     console.log("Users fetched:\n", users);
     console.log("Updated Application:\n", updatedApplication);
     return users;
-
   } catch (error) {
     console.log("Error occurred while fetching users", error);
     throw error;
