@@ -1,15 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 
-export default async function getJobs(userId) {
+export default async function getJobs() {
   const prisma = new PrismaClient();
 
   try {
-    const jobs = await prisma.job.findMany({
-      where: {
-        posterId: userId,
-      }
-    });
-//rerank cohere
+    const jobs = await prisma.job.findMany({});
     console.log("Jobs fetched:\n", jobs);
     return jobs;
 
