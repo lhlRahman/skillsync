@@ -1,17 +1,13 @@
-// eampel
-
-import createJob from '@/lib/db/insert-job-query';
 import { NextResponse } from 'next/server';
-
+import AddApplicant from '@/lib/db/add-applicant';
 // POST /api/days/new
 // Required fields in body: { Day object } - I think?
 export async function POST(req) {
     if (req.method === "POST") {
-        console.log(req)
-        const { job, posterId } = await req.json();
-        console.log(job)
+        const {applicant, job } = await req.json();
         try {
-            const newJob = await createJob(job, posterId);
+            const newJob = await AddApplicant(applicant, job);
+
 
             return NextResponse.json({ status: 201, data: newJob });
         } catch (error) {

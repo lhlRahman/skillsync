@@ -1,18 +1,15 @@
 import { NextResponse } from 'next/server';
-import getJobs from '@/lib/db/get-jobs-query';
-import cohereRank from '@/utils/rerank';
+import acceptedApplication from '@/lib/db/accept-application';
 
 // POST /api/days/new
 // Required fields in body: { Day object } - I think?
-export async function GET(req) {
-  if (req.method === "GET") {
+export async function POST(req) {
+  if (req.method === "POST") {
     try {
+        const {id} = await req.json();
+        const accepted = await acceptedApplication(id);
 
-      console.log("hit api")
-
-      const jobs = await getJobs();
-
-      return NextResponse.json({ status: 201, data: jobs });
+      return NextResponse.json({ status: 201, data: accepted });
     } catch (error) {
       return NextResponse.json({ status: 500 }, { message: `${error}: Internal server error`});
     }
