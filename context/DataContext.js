@@ -11,11 +11,24 @@ export const DataProvider = ({ children }) => {
     type: 0,
     postedJobs: [],
     appliedJobs: [],
-    user: {},
+    user: {
+      type: 1,
+    },
   });
+  const [sidebarShow, setSidebarShow] = useState(false);
+  const [activeSidebar, setActiveSidebar] = useState("jobs");
 
   return (
-    <DataContext.Provider value={{ data, setData }}>
+    <DataContext.Provider
+      value={{
+        data,
+        setData,
+        setSidebarShow,
+        sidebarShow,
+        activeSidebar,
+        setActiveSidebar,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );

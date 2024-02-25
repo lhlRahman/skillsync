@@ -103,7 +103,7 @@ export const createItemPoster = ({
 };
 
 export const CompletedIcon = ({ green = false }) => {
-  return <IoMdDoneAll className={`${green && "text-green-500"}`} />;
+  return <IoMdDoneAll style={{ color: green ? "green" : "" }} />;
 };
 
 export const OnGoingIcon = ({ blue = false }) => {
