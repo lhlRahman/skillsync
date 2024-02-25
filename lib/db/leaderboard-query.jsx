@@ -2,9 +2,10 @@ import { PrismaClient } from "@prisma/client";
 
 export default async function getUsers() {
   const prisma = new PrismaClient();
+  console.log("hit db")
 
   try {
-    const users = await prisma.user.findMany({});
+    const users = await prisma.user.findMany();
 
     console.log("Users fetched:\n", users);
     return users;
