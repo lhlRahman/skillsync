@@ -11,7 +11,6 @@ export default async function getAllJobsPosted(id) {
         },
     });
 
-    console.log("Job fetched:\n", job);
     return job;
 
   } catch (error) {
