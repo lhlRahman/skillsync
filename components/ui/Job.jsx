@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { isUserPoster } from "@/utils/helpers";
 import { useData } from "@/context/DataContext";
+import { useEffect, useState } from "react";
 
 // Placeholder for fake data, replace this with actual data fetching mechanism
-const job = {
+const fakeJob = {
   id: 1,
   title: "Software Engineer",
   description:
@@ -21,6 +22,16 @@ const job = {
   neededApplicants: 5,
   requiredHours: 40,
   completed: false,
+  accpetedApplications: [
+    {
+      user: {
+        id: 2,
+        firstname: "Linda",
+        lastname: "Smith",
+      },
+      note: "I have 5 years of experience in software development.",
+    },
+  ],
   applications: [
     {
       user: {
@@ -36,7 +47,18 @@ const job = {
 
 const Job = () => {
   const { jobid } = useParams();
-  const { data, setShowModal } = useData();
+  const { data, setShowModal, setCurJob } = useData();
+  const [job, setJob] = useState({});
+
+  const fetchJob = async (jobid) => {
+    // Fetch job details using jobid
+    setJob(fakeJob);
+  };
+
+  useEffect(() => {
+    // Fetch job details using jobid
+    fetchJob(jobid);
+  }, []);
 
   // Formatting dates for display
   const formatDate = (dateString) => new Date(dateString).toLocaleDateString();
@@ -47,7 +69,10 @@ const Job = () => {
   const accpetApplication = (id) => {};
   const rejectApplication = (id) => {};
 
+  const confirmHours = (id) => {};
+
   const apply = () => {
+    setCurJob(job);
     setShowModal(true);
   };
 
@@ -88,7 +113,67 @@ const Job = () => {
                 <strong>Completed:</strong> {job.completed ? "Yes" : "No"}
               </span>
               {isUserPoster(data.user) && (
-                <>
+                <div style={{ margin: "2rem 0" }}>
+                  <span className="block">
+                    <strong>Accepted Applications:</strong>
+                  </span>
+                  <table className="min-w-full text-left text-sm font-light">
+                    <thead className="border-b font-medium dark:border-neutral-500">
+                      <tr>
+                        <th scope="col" className="px-6 py-4">
+                          #
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          First Name
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Last Name
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Note
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {job.accpetedApplications.map((application, index) => {
+                        return (
+                          <tr
+                            key={index}
+                            className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
+                          >
+                            <td className="whitespace-nowrap px-6 py-4 font-medium">
+                              {index + 1}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">
+                              {application.user.firstname}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">
+                              {application.user.lastname}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">
+                              {application.note}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 flex flex-col ">
+                              <button
+                                type="button"
+                                onClick={() => confirmHours(application.id)}
+                                className="w-fit text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                              >
+                                Confirm Hours
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {isUserPoster(data.user) && (
+                <div style={{ margin: "3rem 0" }}>
                   <span className="block">
                     <strong>Applications:</strong>
                   </span>
@@ -163,7 +248,7 @@ const Job = () => {
                       })}
                     </tbody>
                   </table>
-                </>
+                </div>
               )}
               {!isUserPoster(data.user) && (
                 <span className="grid">

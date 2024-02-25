@@ -16,11 +16,11 @@ import { useState } from "react";
 
 export default function RootLayout({ children }) {
   const { data } = useData();
-  const { showModal, setShowModal, job } = useData();
+  const { showModal, setShowModal, curJob } = useData();
 
   return (
     <>
-      <ApplyModal show={showModal} setShow={setShowModal} job={job} />
+      <ApplyModal show={showModal} setShow={setShowModal} job={curJob} />
       <Sidebar show={false}>
         <SidebarItem
           title="Jobs"

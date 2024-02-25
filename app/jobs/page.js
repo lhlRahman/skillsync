@@ -8,6 +8,7 @@ import {
   createItemPoster,
   createItemUser,
   isUserPoster,
+  rerank,
 } from "../../utils/helpers";
 import { useData } from "@/context/DataContext";
 
@@ -76,6 +77,16 @@ export default function jobs() {
       setOriginalItems(items.map(createItemUser));
     }
   };
+
+  const sortBasedOnRerank = async () => {
+    await rerank(originalItems);
+  };
+
+  useEffect(() => {
+    if (originalItems.length > 0) {
+      sortBasedOnRerank();
+    }
+  }, [originalItems]);
 
   useEffect(() => {
     fetchJobs();
