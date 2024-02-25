@@ -125,7 +125,7 @@ const Skeleton = ({ image }) => (
 );
 
 export const isUserPoster = (user) => {
-  return user && user.type === 2;
+  return user && user.type == 2;
 };
 
 export const genetatePrompt = ({

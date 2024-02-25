@@ -30,9 +30,10 @@ const AddJob = () => {
     inputs.startDate = new Date(inputs.startDate);
     inputs.endDate = new Date(inputs.endDate);
     axios
-      .post("/api/jobs/new", { job: inputs, posterId: data.clerkId })
+      .post("/api/jobs/new", { job: inputs, posterId: data.user.id })
       .then((res) => {
         console.log(res);
+        window.location.replace("/jobs");
       })
       .catch((err) => {
         console.log(err);

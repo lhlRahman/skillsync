@@ -11,10 +11,7 @@ export const DataProvider = ({ children }) => {
     type: 0,
     postedJobs: [],
     appliedJobs: [],
-    user: {
-      type: 2,
-      bio: "First year computer science student",
-    },
+    user: {},
   });
   const [sidebarShow, setSidebarShow] = useState(false);
   const [activeSidebar, setActiveSidebar] = useState("jobs");

@@ -13,6 +13,7 @@ import {
 import { useData } from "@/context/DataContext";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import axios from "axios";
 
 const items = [
   {
@@ -83,17 +84,38 @@ export default function Jobs() {
   };
 
   const fetchJobs = async () => {
-    // const response = await fetch("/api/jobs");
-    // const data = await response.json();
+    console.log("fetch");
+    // TODO
     if (isUserPoster(data.user)) {
-      setOriginalItems(items.map(createItemPoster));
+      const response = await axios
+        .post("/api/jobs/getAllJobsPosted", { id: data.user.id })
+        .then((res) => {
+          return res.data.data;
+        })
+        .catch((err) => {
+          return [];
+        });
+      setOriginalItems(response.map(createItemPoster));
     } else {
-      setOriginalItems(items.map(createItemUser));
+      const response = await axios
+        .post("/api/jobs/getAllAppliedTo", { id: data.user.id })
+        .then((res) => {
+          return res.data.data;
+        })
+        .catch((err) => {
+          return [];
+        });
+      setOriginalItems(response.map(createItemPoster));
     }
   };
 
   const sortBasedOnRerank = async () => {
     setLoading(true);
+    data.user.bio = data.user.bio || "a";
+    console.log(
+      originalItems.map((each) => each.description),
+      data.user.bio
+    );
     const response = await rerank(
       originalItems.map((each) => each.description),
       data.user.bio
@@ -140,7 +162,7 @@ export default function Jobs() {
 
   useEffect(() => {
     fetchJobs();
-  }, []);
+  }, [data.user]);
 
   useEffect(() => {
     if (filters.length === 0) {

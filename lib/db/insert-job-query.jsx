@@ -9,7 +9,9 @@ export default async function createJob(job, posterId) {
         title: job.title ?? "",
         description: job.description ?? "",
         location: job.location ?? "",
-        imageUrl: job.imageUrl ?? "",
+        imageUrl:
+          job.imageUrl ??
+          "https://htmlcolorcodes.com/assets/images/colors/gray-color-solid-background-1920x1080.png",
         startDate: job.startDate ?? "",
         endDate: job.endDate ?? "",
         acceptedApplicants: job.acceptedApplicants ?? [],
