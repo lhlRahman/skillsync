@@ -12,6 +12,7 @@ import Link from "next/link";
 export const FloatingNavDemo = ({
   navItems,
   className,
+  authenticated,
 }: {
   navItems: {
     name: string;
@@ -19,6 +20,7 @@ export const FloatingNavDemo = ({
     icon?: JSX.Element;
   }[];
   className?: string;
+  authenticated: boolean;
 }) => {
   const { scrollYProgress } = useScroll();
 
@@ -65,9 +67,17 @@ export const FloatingNavDemo = ({
             <span className="hidden sm:block text-sm">{navItem.name}</span>
           </Link>
         ))}
-        <Link href="/signup" className="relative"/>
+        <Link href="/signup" className="relative" />
         <button className="border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full">
-          <Link href="/signup" className="relative">Get Started</Link>
+          {authenticated ? (
+            <Link href="/jobs" className="relative">
+              Jobs
+            </Link>
+          ) : (
+            <Link href="/signup" className="relative">
+              Get Started
+            </Link>
+          )}
           <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
         </button>
       </motion.div>
