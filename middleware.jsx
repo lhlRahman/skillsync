@@ -14,6 +14,7 @@ export default authMiddleware({
     "/jobs/(.*)",
     "/user",
     "/user/(.*)",
+    "/contact",
   ],
 });
 export const config = {
