@@ -26,7 +26,7 @@ export const projects = [
     {
       title: "Vincent Ostrowski",
       description:
-        "As the Scrum Master, I ensured project efficiency and timely delivery. I also spearheaded the integration of Cohere AI.",
+        "As the Scrum Master, I ensured project efficiency and timely delivery. I also spearheaded the integration of Cohere AI, as well as contributing to the Database Fetching and APIs.",
       link: "https://github.com/vincentostrowski",
     },
     {
