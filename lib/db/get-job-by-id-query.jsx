@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 export default async function getJobById(id) {
   const prisma = new PrismaClient();
 
+  if (!id) throw new Error("Invalid job id");
+
   try {
     let job = await prisma.job.findUnique({
       where: {

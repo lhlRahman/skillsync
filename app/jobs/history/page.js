@@ -67,13 +67,17 @@ export default function History() {
           console.log(err);
           return [];
         });
-      setOriginalItems(response.map(createItemPoster));
+      setOriginalItems(response.map(createItemUser));
     }
   };
 
+  let jobsFetched = false;
   useEffect(() => {
-    fetchJobs();
-  }, []);
+    if (!jobsFetched && user.id) {
+      fetchJobs();
+      jobsFetched = true;
+    }
+  }, [user]);
 
   useEffect(() => {
     if (filters.length === 0) {

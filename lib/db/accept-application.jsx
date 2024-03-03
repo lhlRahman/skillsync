@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 export default async function acceptedApplication(id) {
   const prisma = new PrismaClient();
 
+  if (!id) throw new Error("Invalid application id");
+
   try {
     const users = await prisma.application.update({
       where: {

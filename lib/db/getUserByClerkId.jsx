@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 export default async function GetUserByClerkId(clerkId) {
   const prisma = new PrismaClient();
 
+  if (!clerkId) throw new Error("Invalid clerk id");
+
   try {
     const user = await prisma.user.findUnique({
       where: {

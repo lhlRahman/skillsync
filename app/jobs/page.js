@@ -41,7 +41,6 @@ export default function Jobs() {
   };
 
   const fetchJobs = async () => {
-    console.log(user, "user");
     if (isUserPoster(user)) {
       const response = await axios
         .post("/api/jobs/getAllJobsPosted", { id: user.id })
@@ -54,7 +53,6 @@ export default function Jobs() {
             });
             return [];
           }
-          console.log("in poster");
           return res.data.data;
         })
         .catch((err) => {
@@ -73,7 +71,6 @@ export default function Jobs() {
             });
             return [];
           }
-          console.log("in volunteer");
           return res.data.data;
         })
         .catch((err) => {

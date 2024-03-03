@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
               link="/jobs/leaderboard"
             />
             <SidebarItem
-              title="Jobs Completed"
+              title="Jobs Applied"
               Icon={FaHistory}
               link="/jobs/history"
             />

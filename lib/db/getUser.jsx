@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 export default async function getUser(id) {
   const prisma = new PrismaClient();
 
+  if (!id) throw new Error("Invalid user id");
+
   try {
     const user = await prisma.user.findUnique({ where: { id: id } });
     return user;

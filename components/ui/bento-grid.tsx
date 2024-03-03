@@ -39,7 +39,7 @@ export const BentoGridItem = ({
   header?: React.ReactNode;
   icon?: React.ReactNode;
   neededApplicants?: string | React.ReactNode;
-  acceptedApplicants?: string | React.ReactNode;
+  acceptedApplicants?: any[];
   id?: string | number;
   completed?: boolean;
 }) => {
@@ -76,7 +76,7 @@ export const BentoGridItem = ({
           ) : (
             icon || (
               <div className="font-sans font-normal text-xs text-neutral-300">
-                {acceptedApplicants}/{neededApplicants} applicants
+                {acceptedApplicants.length}/{neededApplicants} applicants
               </div>
             )
           )}
