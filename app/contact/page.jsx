@@ -32,7 +32,7 @@ export const projects = [
     {
       title: "Arshia Zakeri",
       description:
-        "A multinational technology company that specializes in Internet-related services and products.",
+        "I took charge of seamlessly integrating front-end and backend systems, incorporating Semantic search functionality, implementing robust authentication mechanisms, and optimizing overall system performance.",
       link: "https://github.com/ArshiaZr",
     },
     {
