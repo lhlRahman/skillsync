@@ -26,7 +26,7 @@ export const projects = [
     {
       title: "Vincent Ostrowski",
       description:
-        "A streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries, and more on thousands of internet-connected devices.",
+        "As the Scrum Master, I ensured project efficiency and timely delivery. I also spearheaded the integration of Cohere AI.",
       link: "https://github.com/vincentostrowski",
     },
     {
