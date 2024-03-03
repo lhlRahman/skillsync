@@ -5,9 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useData } from "@/context/DataContext";
+import { createWorker } from 'tesseract.js';
+import { FaFileUpload } from "react-icons/fa";
 
 export function UserInputForm() {
   const { data, setData } = useData();
+  const [file, setFile] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState(null);
   const [user, setUser] = useState({
     email: "",
     username: "",
@@ -35,6 +39,7 @@ export function UserInputForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     user.clerkId = data.clerkId;
+
     try {
       const response = await fetch("/api/users/create", {
         method: "POST",
@@ -57,6 +62,29 @@ export function UserInputForm() {
       console.error("Error:", error);
     }
   };
+
+  function handleImageUpload(event) {
+    setPdfUrl(null);
+      const files = event.target.files;
+      if (files && files.length > 0) {
+          const url = URL.createObjectURL(files[0]).replace("blob:", "");
+          setPdfUrl(url);
+          setFile(files[0]);
+          console.log(files[0]);
+          console.log(url);
+      }
+  }
+
+  async function orc() {
+    const worker = await createWorker('eng');
+      const ret = await worker.recognize(file);
+      console.log(ret.data.text);
+      await worker.terminate();
+  }
+
+
+
+
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
@@ -158,7 +186,33 @@ export function UserInputForm() {
               placeholder="Write about some activities and experiences you enjoy doing or have completed. Explain what you liked about each and what aspects you have excelled at."
               onChange={handleInputChange}
             />
+
+<label htmlFor="dropzone-file" className="block font-medium leading-6 text-purple-900 text-right">
+          <div className="mt-2 flex justify-center rounded-lg border border-dashed border-purple-900/25 px-6 py-10">
+            <div className="text-center">
+              <FaFileUpload className="mx-auto h-12 w-12 text-purple-600 mb-2" />
+              <p className="mb-2 text-sm text-black">
+                <span className="relative cursor-pointer rounded-md font-semibold text-purple-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-purple-600 focus-within:ring-offset-2 hover:text-purple-500">
+                  Click to upload
+                </span>{" "}
+                or drag and drop
+              </p>
+              <p className="text-xs text-purple-600">
+                PDF up to 10MD
+              </p>
+            </div>
+            <input
+              id="dropzone-file"
+              type="file"
+              className="hidden"
+              accept=".pdf"
+              onChange={(e) => handleImageUpload(e)}
+            />
           </div>
+        </label>
+          </div>
+          
+
         )}
         <div className="text-center">
           <Button
