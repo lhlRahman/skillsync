@@ -15,6 +15,7 @@ export default authMiddleware({
     "/user",
     "/user/(.*)",
     "/contact",
+    "/about",
   ],
 });
 export const config = {
