@@ -38,7 +38,7 @@ export const projects = [
     {
       title: "Raj Zatsarenko",
       description:
-        "A technology company that focuses on building products that advance Facebook's mission of bringing the world closer together.",
+        "I focused on database fetching and developing the backend API, ensuring seamless data integration and robust server-side functionality.",
       link: "https://github.com/penszzip",
     },
   ];
