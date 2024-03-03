@@ -1,13 +1,13 @@
 "use client";
-import Image from "next/image";
 import { isUserPoster } from "@/utils/helpers";
 import { useData } from "@/context/DataContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 const Job = ({ jobid }) => {
-  const { data, setShowModal, setCurJob } = useData();
+  const { setShowModal, setCurJob, user } = useData();
   const [job, setJob] = useState({});
+  const [canApply, setCanApply] = useState(false);
 
   const fetchJob = async (jobid) => {
     const response = await axios
@@ -21,9 +21,24 @@ const Job = ({ jobid }) => {
     setJob(response);
   };
 
+  let jobFetch = false;
   useEffect(() => {
-    fetchJob(jobid);
+    if (!jobFetch) {
+      fetchJob(jobid);
+      jobFetch = true;
+    }
   }, []);
+
+  useEffect(() => {
+    if (user.appliedJobs) {
+      let found = user.appliedJobs.find((each) => each.jobId == jobid);
+      if (found) {
+        setCanApply(false);
+      } else {
+        setCanApply(true);
+      }
+    }
+  }, [jobid, user]);
 
   // Formatting dates for display
   const formatDate = (dateString) => new Date(dateString).toLocaleDateString();
@@ -55,10 +70,11 @@ const Job = ({ jobid }) => {
   };
 
   const apply = () => {
-    setCurJob(job);
-    setShowModal(true);
+    if (canApply) {
+      setCurJob(job);
+      setShowModal(true);
+    }
   };
-  console.log(job);
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen">
@@ -66,10 +82,8 @@ const Job = ({ jobid }) => {
         <img
           src={job.imageUrl}
           alt="Job Image"
-          width={500}
-          height={250}
           className="w-full"
-          objectFit="cover"
+          style={{ objectFit: "cover", height: "20rem" }}
         />
         <div className="p-6">
           <h2 className="font-bold text-2xl mb-2 text-gray-800">{job.title}</h2>
@@ -78,7 +92,7 @@ const Job = ({ jobid }) => {
               <span className="block">
                 <strong>Description:</strong> {job.description}
               </span>
-              <span className="block">
+              <span className="block" style={{ marginTop: "1rem" }}>
                 <strong>Location:</strong> {job.location}
               </span>
               <span className="block">
@@ -96,7 +110,7 @@ const Job = ({ jobid }) => {
               <span className="block">
                 <strong>Completed:</strong> {job.completed ? "Yes" : "No"}
               </span>
-              {isUserPoster(data.user) && (
+              {isUserPoster(user) && (
                 <div style={{ margin: "2rem 0" }}>
                   <span className="block">
                     <strong>Accepted Applications:</strong>
@@ -166,7 +180,7 @@ const Job = ({ jobid }) => {
                   </table>
                 </div>
               )}
-              {isUserPoster(data.user) && (
+              {isUserPoster(user) && (
                 <div style={{ margin: "3rem 0" }}>
                   <span className="block">
                     <strong>Applications:</strong>
@@ -254,14 +268,18 @@ const Job = ({ jobid }) => {
                   </table>
                 </div>
               )}
-              {!isUserPoster(data.user) && (
+              {!isUserPoster(user) && (
                 <span className="grid">
                   <button
                     type="button"
                     onClick={() => apply()}
-                    className="w-fit text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 justify-self-end"
+                    className={`w-fit text-white ${
+                      canApply
+                        ? "bg-blue-600 hover:bg-blue-800 cursor-pointer"
+                        : "bg-blue-800 cursor-default"
+                    } focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 justify-self-end`}
                   >
-                    Apply
+                    {canApply ? "Apply" : "Applied"}
                   </button>
                 </span>
               )}

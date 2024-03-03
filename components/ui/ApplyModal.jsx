@@ -11,7 +11,7 @@ export default function ApplyModal({ show, setShow, job }) {
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(false);
   const noteRef = useRef(null);
-  const { data } = useData();
+  const { user, addAlert } = useData();
 
   const handleInputChange = (e) => {
     e.persist();
@@ -25,9 +25,8 @@ export default function ApplyModal({ show, setShow, job }) {
     setLoading(true);
     const prompt = genetatePrompt({
       description: job.description,
-      bio: data.user.bio,
+      bio: user.bio,
     });
-    console.log(prompt);
 
     const response = await autoCompleteAPI(prompt);
     if (response.success === true) {
@@ -39,25 +38,35 @@ export default function ApplyModal({ show, setShow, job }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputs);
+
     inputs.job = { id: job.id, location: job.location };
     inputs.applicant = {
-      id: data.user.id,
-      email: data.user.email,
+      id: user.id,
+      email: user.email,
       note: inputs.note,
     };
 
-    const response = await axios
-      .post(`/api/apply`, inputs)
+    axios
+      .post(`/api/jobs/apply`, inputs)
       .then((res) => {
-        return res.data.data;
+        if (res.data.status != 201) {
+          console.log(res.data);
+          addAlert({
+            message: res.data.message,
+            type: "error",
+          });
+        } else {
+          addAlert({
+            message: "Application submitted successfully",
+            type: "success",
+          });
+          setShow(false);
+          window.location.reload();
+        }
       })
       .catch((err) => {
-        return {};
+        console.log(err);
       });
-    console.log(response);
-    setShow(false);
-    window.location.replace("/jobs");
   };
   return (
     <div id={styles.applyModal} className={`${show ? styles.show : ""}`}>

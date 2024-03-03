@@ -13,7 +13,7 @@ const AddJob = () => {
   const [coordinates, setCoordinates] = useState([]);
   const [address, setAddress] = useState("");
   const descriptionRef = useRef(null);
-  const { data } = useData();
+  const { user, addAlert } = useData();
   const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
@@ -30,18 +30,25 @@ const AddJob = () => {
     inputs.startDate = new Date(inputs.startDate);
     inputs.endDate = new Date(inputs.endDate);
     axios
-      .post("/api/jobs/new", { job: inputs, posterId: data.user.id })
+      .post("/api/jobs/new", { job: inputs, posterId: user.id })
       .then((res) => {
-        console.log(res);
-        window.location.replace("/jobs");
+        if (res.data.status === 201) {
+          addAlert({ message: "Job Created", type: "success" });
+          window.location.replace("/jobs");
+        } else {
+          addAlert({ message: res.data.message, type: "error" });
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-    console.log(inputs, coordinates, address);
   };
 
   const cohereAutoComplete = async () => {
+    if (!inputs.description) {
+      addAlert({ message: "Please enter a brief description", type: "error" });
+      return;
+    }
     setLoading(true);
     const prompt = genetatePrompt({
       description: inputs.description,

@@ -2,43 +2,53 @@ import { PrismaClient } from "@prisma/client";
 
 export default async function AddApplicant(applicant, job) {
   const prisma = new PrismaClient();
-  console.log("hit db")
 
-  /*
-  model Application {
-  id        Int      @id @default(autoincrement())
-  jobId     Int
-  applicantId Int
-  location  String
-  email     String
-  note      String
-  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  applicant User     @relation(name: "Applicant", fields: [applicantId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  status    String   @db.VarChar(255) // e.g., "applied", "accepted", "rejected"
-}
-  */
+  if (!applicant || !job) {
+    throw new Error("Applicant or job not found");
+  }
+
+  if (!applicant.id || !job.id) {
+    throw new Error("Applicant or job not found");
+  }
+
+  if (!applicant.email) {
+    throw new Error("Applicant email not found");
+  }
+
+  if (!applicant.note) {
+    throw new Error("Applicant note not found");
+  }
+
+  if (!job.location) {
+    throw new Error("Job location not found");
+  }
 
   try {
-    const users = await prisma.application.create(
-        {
-            data: {
-                jobId: job.id,
-                applicantId: applicant.id,
-                location: job.location,
-                email: applicant.email,
-                note: applicant.note,
-                status: "applied",
-              }
-        }
-    );
+    // check application already exist in the database for the same job, error will be thrown
+    const application = await prisma.application.findFirst({
+      where: {
+        jobId: job.id,
+        applicantId: applicant.id,
+      },
+    });
 
-    console.log("Users fetched:\n", users);
+    if (application) {
+      throw new Error("Application already exists");
+    }
+
+    const users = await prisma.application.create({
+      data: {
+        jobId: job.id,
+        applicantId: applicant.id,
+        location: job.location,
+        email: applicant.email,
+        note: applicant.note,
+        status: "applied",
+      },
+    });
+
     return users;
-
   } catch (error) {
-    console.log("Error occurred while fetching users", error);
     throw error;
   } finally {
     await prisma.$disconnect();

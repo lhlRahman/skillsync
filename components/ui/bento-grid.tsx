@@ -1,6 +1,6 @@
 import { useData } from "@/context/DataContext";
 import { cn } from "@/utils/cn";
-import { isUserPoster } from "@/utils/helpers";
+import { clampText, isUserPoster } from "@/utils/helpers";
 import React from "react";
 
 export const BentoGrid = ({
@@ -61,30 +61,33 @@ export const BentoGridItem = ({
       )}
       style={{ background: "#2A2A2A" }}
     >
-      <div onClick={goToJob(id)} className="cursor-pointer">
+      <div onClick={goToJob(id)} className="cursor-pointer h-40 inline-block">
         {header}
       </div>
-      <div className="group-hover/bento:translate-x-2 transition duration-200">
-        {completed && !isUserPoster(data.user) ? (
-          <button
-            onClick={downloadConfirmation}
-            className="relative z-10 w-fit text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 justify-self-end"
-          >
-            Get Volunteers Confirmation
-          </button>
-        ) : (
-          icon || (
-            <div className="font-sans font-normal text-xs text-neutral-300">
-              {acceptedApplicants}/{neededApplicants} applicants
-            </div>
-          )
-        )}
-
-        <div className="font-sans font-bold text-neutral-300 text-neutral-200 mb-2 mt-2">
-          {title}
+      <div className="group-hover/bento:translate-x-2 transition duration-200 flex flex-col gap-2">
+        <div className="justify-self-start">
+          {completed && !isUserPoster(data.user) ? (
+            <button
+              onClick={downloadConfirmation}
+              className="relative z-10 w-fit text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 justify-self-end"
+            >
+              Get Volunteers Confirmation
+            </button>
+          ) : (
+            icon || (
+              <div className="font-sans font-normal text-xs text-neutral-300">
+                {acceptedApplicants}/{neededApplicants} applicants
+              </div>
+            )
+          )}
         </div>
-        <div className="font-sans font-normal text-xs text-neutral-300">
-          {description}
+        <div className="justify-self-end">
+          <div className="font-sans font-bold text-neutral-300 mb-2 mt-2">
+            {clampText(title, 32)}
+          </div>
+          <div className="font-sans font-normal text-xs text-neutral-300">
+            {clampText(description, 450)}
+          </div>
         </div>
       </div>
     </div>

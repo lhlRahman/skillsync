@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import getAllJobsPosted from "@/lib/db/get-all-jobs-posted";
+
 // POST /api/days/new
-// Required fields in body: { Day object } - I think?
 export async function POST(req) {
   if (req.method === "POST") {
     const { id } = await req.json();

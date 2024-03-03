@@ -5,11 +5,8 @@ export default async function getJobs() {
 
   try {
     const jobs = await prisma.job.findMany();
-    console.log("Jobs fetched:\n", jobs);
     return jobs;
-
   } catch (error) {
-    console.log("Error occurred while fetching jobs", error);
     throw error;
   } finally {
     await prisma.$disconnect();

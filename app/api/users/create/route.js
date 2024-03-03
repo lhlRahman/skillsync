@@ -9,10 +9,10 @@ export async function POST(req) {
 
       return NextResponse.json({ status: 201, data: createduser });
     } catch (error) {
-      return NextResponse.json(
-        { status: 500 },
-        { message: `${error}: Internal server error` }
-      );
+      return NextResponse.json({
+        status: 500,
+        message: error.message,
+      });
     }
   }
 }

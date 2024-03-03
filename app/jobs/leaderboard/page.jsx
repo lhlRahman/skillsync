@@ -5,14 +5,17 @@ import { getLeaderboard } from "@/lib/api";
 export default function Page() {
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const newUsers = await getLeaderboard();
-      console.log(newUsers);
-      setUsers(newUsers);
-    };
+  const fetchUsers = async () => {
+    const newUsers = await getLeaderboard();
+    setUsers(newUsers);
+  };
 
-    fetchUsers();
+  let dataFetched = false;
+  useEffect(() => {
+    if (!dataFetched) {
+      fetchUsers();
+      dataFetched = true;
+    }
   }, []);
 
   useEffect(() => {
@@ -37,7 +40,10 @@ export default function Page() {
                 #
               </th>
               <th scope="col" className="px-6 py-4">
-                Username
+                First Name
+              </th>
+              <th scope="col" className="px-6 py-4">
+                Last Name
               </th>
               <th scope="col" className="px-6 py-4">
                 Hours
@@ -55,7 +61,10 @@ export default function Page() {
                     {index + 1}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
-                    {user.username}
+                    {user.firstName}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4">
+                    {user.lastName}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
                     {user.hoursCompleted}

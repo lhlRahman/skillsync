@@ -12,53 +12,11 @@ import {
 import { useData } from "@/context/DataContext";
 import axios from "axios";
 
-const items = [
-  {
-    id: "1",
-    title: "black lives matter",
-    description: "I love black people",
-    location: "New York, NY",
-    categories: '["Social Justice", "Community"]',
-    imageUrl:
-      "https://vastphotos.com/files/uploads/social/good-morning-new-york.jpg",
-    startDate: "2021-08-01T00:00:00.000Z",
-    endDate: "2021-08-01T00:00:00.000Z",
-    createdAt: "2021-08-01T00:00:00.000Z",
-    updatedAt: "2021-08-01T00:00:00.000Z",
-    acceptedApplicants: 1,
-    neededApplicants: 1,
-    requiredHours: 30,
-    posterId: "1",
-    completed: true,
-    poster: "1",
-    applications: [],
-  },
-  {
-    id: "1",
-    title: "black lives matter",
-    description: "I love black people",
-    location: "New York, NY",
-    categories: '["Social Justice", "Community"]',
-    imageUrl: "",
-    startDate: "2021-08-01T00:00:00.000Z",
-    endDate: "2021-08-01T00:00:00.000Z",
-    createdAt: "2021-08-01T00:00:00.000Z",
-    updatedAt: "2021-08-01T00:00:00.000Z",
-    acceptedApplicants: 1,
-    neededApplicants: 1,
-    requiredHours: 30,
-    posterId: "1",
-    completed: false,
-    poster: "1",
-    applications: [],
-  },
-];
-
 export default function History() {
   const [originalItems, setOriginalItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [filters, setFilters] = useState([]);
-  const { data } = useData();
+  const { user, addAlert } = useData();
 
   const addFilter = (filter) => {
     setFilters([...filters, filter]);
@@ -73,10 +31,18 @@ export default function History() {
   }, []);
 
   const fetchJobs = async () => {
-    if (isUserPoster(data.user)) {
+    if (isUserPoster(user)) {
       const response = await axios
-        .post("/api/jobs/getAllJobsPosted", { id: data.user.id })
+        .post("/api/jobs/getAllJobsPosted", { id: user.id })
         .then((res) => {
+          if (res.data.status != 201) {
+            addAlert({
+              message:
+                "There was an error fetching records. Please reload the page.",
+              type: "error",
+            });
+            return [];
+          }
           return res.data.data;
         })
         .catch((err) => {
@@ -85,9 +51,16 @@ export default function History() {
       setOriginalItems(response.map(createItemPoster));
     } else {
       const response = await axios
-        .post("/api/jobs/getAllAppliedTo", { id: data.user.id })
+        .post("/api/jobs/getAllAppliedTo", { id: user.id })
         .then((res) => {
-          console.log(res.data.data);
+          if (res.data.status != 201) {
+            addAlert({
+              message:
+                "There was an error fetching records. Please reload the page.",
+              type: "error",
+            });
+            return [];
+          }
           return res.data.data;
         })
         .catch((err) => {
@@ -151,6 +124,9 @@ export default function History() {
             <div className={styles.title}>Ongoing</div>
           </div>
         </div>
+        {filteredItems.length === 0 && (
+          <div className="mt-5 text-center">No records found</div>
+        )}
         <JobsTable items={filteredItems} />
       </div>
     </main>

@@ -9,6 +9,23 @@ export default async function GetUserByClerkId(clerkId) {
         clerkId: clerkId,
       },
     });
+    if (user) {
+      if (user.type === 2) {
+        const jobs = await prisma.job.findMany({
+          where: {
+            posterId: user.id,
+          },
+        });
+        user.postedJobs = jobs;
+      } else {
+        const applications = await prisma.application.findMany({
+          where: {
+            applicantId: user.id,
+          },
+        });
+        user.appliedJobs = applications;
+      }
+    }
 
     return user;
   } catch (error) {

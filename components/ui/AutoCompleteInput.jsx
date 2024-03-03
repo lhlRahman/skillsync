@@ -19,24 +19,27 @@ const AutoCompleteInput = ({ setCoordinates, setAddress }) => {
   const autocompleteInputRef = useRef(null);
 
   useEffect(() => {
-    loadGoogleMapsScript("AIzaSyAmFrhx_j1xZogDmH0gUls0pEgwLJBdz4I", () => {
+    loadGoogleMapsScript(process.env.NEXT_PUBLIC_GOOGLE_MAP, () => {
+      if (window.google === undefined) return;
       const autocomplete = new window.google.maps.places.Autocomplete(
         autocompleteInputRef.current,
         { types: ["geocode"] }
       );
 
-      autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) {
-          console.log("Returned place contains no geometry");
-          return;
-        }
+      if (autocomplete) {
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+          if (!place.geometry) {
+            console.log("Returned place contains no geometry");
+            return;
+          }
 
-        const lat = place.geometry.location.lat();
-        const lng = place.geometry.location.lng();
-        setAddress(place.formatted_address);
-        setCoordinates([lat, lng]);
-      });
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
+          setAddress(place.formatted_address);
+          setCoordinates([lat, lng]);
+        });
+      }
     });
   }, []);
 

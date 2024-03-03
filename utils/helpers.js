@@ -108,18 +108,13 @@ export const CompletedIcon = ({ green = false }) => {
 };
 
 export const OnGoingIcon = ({ blue = false }) => {
-  // return <AiOutlineLoading3Quarters className="animate-spin" />;
   return <AiOutlineLoading3Quarters className={`${blue && "text-blue-500"}`} />;
 };
 
 const Skeleton = ({ image }) => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100">
+  <div className="relative w-full h-full min-h-[6rem] overflow-hidden rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100">
     {image && (
-      <img
-        src={image}
-        alt=""
-        className="w-full h-full object-cover rounded-xl"
-      />
+      <img src={image} alt="" className="absolute w-full h-full object-cover" />
     )}
   </div>
 );
@@ -183,4 +178,12 @@ export const autoCompleteAPI = async (prompt) => {
     .catch((err) => {
       return { success: false, text: err };
     });
+};
+
+export const clampText = (text, max) => {
+  if (max < 3) return text;
+  if (text.length > max) {
+    return text.substring(0, max - 3) + "...";
+  }
+  return text;
 };

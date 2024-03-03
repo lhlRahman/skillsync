@@ -32,7 +32,6 @@ export function FloatingNav() {
       <FloatingNavDemo
         navItems={navItems}
         authenticated={user.userId != null}
-        userId={user.userId}
       />
     </div>
   );

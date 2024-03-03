@@ -1,16 +1,16 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useData } from "@/context/DataContext";
+import { useAuth } from "@clerk/clerk-react";
+import axios from "axios";
 
 export function UserInputForm() {
-  const { data, setData } = useData();
-  const [user, setUser] = useState({
-    email: "",
-    username: "",
+  const auth = useAuth();
+  const { setUser, addAlert } = useData();
+  const [inputs, setInputs] = useState({
     firstName: "",
     lastName: "",
     bio: "",
@@ -19,43 +19,35 @@ export function UserInputForm() {
 
   // Function to handle setting user type
   const handleUserTypeChange = (type) => {
-    setUser((prevState) => ({
+    setInputs((prevState) => ({
       ...prevState,
       type: type,
     }));
   };
 
   const handleInputChange = (e) => {
-    setUser({
-      ...user,
+    setInputs({
+      ...inputs,
       [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    user.clerkId = data.clerkId;
-    try {
-      const response = await fetch("/api/users/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user }),
+    inputs.clerkId = auth.userId;
+    axios
+      .post("/api/users/create", inputs)
+      .then((res) => {
+        if (res.data.status === 201) {
+          setUser(res.data.data);
+          window.location.replace("/jobs");
+        } else {
+          addAlert({ message: res.data.message, type: "error" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // Do we need data for something???
-      const newData = await response.json();
-      console.log(newData.data);
-      setData({ ...data, user: newData.data });
-      // window.location.replace("/jobs");
-    } catch (error) {
-      console.error("Error:", error);
-    }
   };
 
   return (
@@ -65,35 +57,24 @@ export function UserInputForm() {
       </h2>
       <div className="flex justify-center gap-4 mb-6">
         <Button
-          className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+          className={`${
+            inputs.type == 1 ? "bg-gray-400" : "bg-black"
+          } text-white px-4 py-2 rounded hover:bg-gray-800`}
           onClick={() => handleUserTypeChange(2)}
         >
           Employer
         </Button>
         <Button
-          className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+          className={`${
+            inputs.type == 1 ? "bg-black" : "bg-gray-400"
+          } text-white px-4 py-2 rounded hover:bg-gray-800 `}
           onClick={() => handleUserTypeChange(1)}
         >
           Volunteer
         </Button>
       </div>
       <form className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label
-              className="text-sm font-medium text-gray-700 block mb-2"
-              htmlFor="username"
-            >
-              Username
-            </label>
-            <Input
-              className="w-full px-4 py-2 border border-gray-200 rounded-md dark:border-gray-800"
-              id="username"
-              name="username"
-              placeholder="Your username"
-              onChange={handleInputChange}
-            />
-          </div>
+        <div className="grid grid-cols-1 gap-4">
           <div>
             <label
               className="text-sm font-medium text-gray-700 block mb-2"
@@ -143,7 +124,7 @@ export function UserInputForm() {
             />
           </div>
         </div>
-        {user.type === 1 && (
+        {inputs.type === 1 && (
           <div>
             <label
               className="text-sm font-medium text-gray-700 block mb-2"
