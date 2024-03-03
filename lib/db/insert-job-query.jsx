@@ -53,10 +53,8 @@ export default async function createJob(job, posterId) {
       },
     });
 
-    console.log("Job created:", newJob);
     return newJob;
   } catch (error) {
-    console.log("Error occurred while creating job:", error);
     throw error;
   } finally {
     await prisma.$disconnect();

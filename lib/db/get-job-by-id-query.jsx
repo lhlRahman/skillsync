@@ -29,7 +29,6 @@ export default async function getJobById(id) {
 
     return job;
   } catch (error) {
-    console.log("Error occurred while fetching jobs", error);
     throw error;
   } finally {
     await prisma.$disconnect();

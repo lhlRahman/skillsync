@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-export default async function confirmHours(id) {
+export default async function rejectHours(id) {
   const prisma = new PrismaClient();
 
   if (!id) throw new Error("Invalid application id");
@@ -11,7 +11,7 @@ export default async function confirmHours(id) {
         id: id,
       },
       data: {
-        status: "confirmed",
+        status: "rejected",
       },
     });
 
@@ -31,18 +31,6 @@ export default async function confirmHours(id) {
           set: job.acceptedApplicants.filter(
             (applicant) => applicant !== application.id
           ),
-        },
-      },
-    });
-
-    // updade and add job's hours to the user's hours
-    const user = await prisma.user.update({
-      where: {
-        id: application.applicantId,
-      },
-      data: {
-        hoursCompleted: {
-          increment: updatedJob.requiredHours,
         },
       },
     });

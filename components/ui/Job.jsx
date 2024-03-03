@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const Job = ({ jobid }) => {
-  const { setShowModal, setCurJob, user } = useData();
+  const { setShowModal, setCurJob, user, addAlert } = useData();
   const [job, setJob] = useState({});
   const [canApply, setCanApply] = useState(false);
 
@@ -52,11 +52,33 @@ const Job = ({ jobid }) => {
         id: id,
       })
       .then((res) => {
-        window.location.reload();
+        if (res.data.status == 201) {
+          window.location.reload();
+        } else {
+          addAlert({ message: res.data.message, type: "error" });
+        }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  const rejectApplication = (id) => {};
+
+  const rejectApplication = async (id) => {
+    await axios
+      .post(`/api/application/rejectApplication`, {
+        id: id,
+      })
+      .then((res) => {
+        if (res.data.status == 201) {
+          window.location.reload();
+        } else {
+          addAlert({ message: res.data.message, type: "error" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const confirmHours = async (id) => {
     await axios
@@ -64,9 +86,54 @@ const Job = ({ jobid }) => {
         id: id,
       })
       .then((res) => {
+        if (res.data.status == 201) {
+          window.location.reload();
+        } else {
+          addAlert({ message: res.data.message, type: "error" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const rejectHours = async (id) => {
+    await axios
+      .post(`/api/application/rejectHours`, {
+        id: id,
+      })
+      .then((res) => {
+        if (res.data.status == 201) {
+          window.location.reload();
+        } else {
+          addAlert({ message: res.data.message, type: "error" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const complete = async () => {
+    if (job.acceptedApplicants != 0) {
+      addAlert({
+        message:
+          "You cannot complete a job with accepted applicants. Please make an acction on the accepted applicants first.",
+        type: "error",
+        time: 5000,
+      });
+      return;
+    }
+    await axios
+      .post(`/api/jobs/complete`, {
+        id: job.id,
+      })
+      .then((res) => {
         window.location.reload();
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const apply = () => {
@@ -172,6 +239,20 @@ const Job = ({ jobid }) => {
                                   >
                                     Confirm Hours
                                   </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => rejectHours(application.id)}
+                                    className="w-fit text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                  >
+                                    Reject Hours
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => visitProfile(application.id)}
+                                    className="w-fit text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                  >
+                                    Profile
+                                  </button>
                                 </td>
                               </tr>
                             );
@@ -247,7 +328,7 @@ const Job = ({ jobid }) => {
                                   <button
                                     type="button"
                                     onClick={() =>
-                                      accpetApplication(application.id)
+                                      rejectApplication(application.id)
                                     }
                                     className="w-fit text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                                   >
@@ -280,6 +361,21 @@ const Job = ({ jobid }) => {
                     } focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 justify-self-end`}
                   >
                     {canApply ? "Apply" : "Applied"}
+                  </button>
+                </span>
+              )}
+              {isUserPoster(user) && (
+                <span className="grid">
+                  <button
+                    type="button"
+                    onClick={() => complete()}
+                    className={`w-fit text-white ${
+                      !job.completed
+                        ? "bg-blue-600 hover:bg-blue-800 cursor-pointer"
+                        : "bg-blue-800 cursor-default"
+                    } focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 justify-self-end`}
+                  >
+                    {job.completed ? "Completed" : "Complete Job"}
                   </button>
                 </span>
               )}

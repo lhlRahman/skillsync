@@ -31,7 +31,6 @@ export default async function GetUserByClerkId(clerkId) {
 
     return user;
   } catch (error) {
-    console.log("Error occurred while fetching jobs", error);
     throw error;
   } finally {
     await prisma.$disconnect();
