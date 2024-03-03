@@ -7,6 +7,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useData } from "@/context/DataContext";
 import { createWorker } from 'tesseract.js';
 import { FaFileUpload } from "react-icons/fa";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../lib/FirebaseConfig";
+import { v4 as uuidv4 } from 'uuid';
+import ConvertAPI from 'convertapi';
+
 
 export function UserInputForm() {
   const { data, setData } = useData();
@@ -18,8 +23,10 @@ export function UserInputForm() {
     firstName: "",
     lastName: "",
     bio: "",
-    type: 1, // 1: volunteer, 2: employer
+    type: 1, // 1: volunteer, 2: employe
   });
+
+  const convertapi = new ConvertAPI('ovk3w0EEUfoqlCtK');
 
   // Function to handle setting user type
   const handleUserTypeChange = (type) => {
@@ -63,21 +70,26 @@ export function UserInputForm() {
     }
   };
 
-  function handleImageUpload(event) {
-    setPdfUrl(null);
-      const files = event.target.files;
-      if (files && files.length > 0) {
-          const url = URL.createObjectURL(files[0]).replace("blob:", "");
-          setPdfUrl(url);
-          setFile(files[0]);
-          console.log(files[0]);
-          console.log(url);
-      }
-  }
+
+const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    const storageRef = ref(storage, `uploads/${uuidv4()}`);
+    uploadBytes(storageRef, file).then((snapshot) => {
+      console.log('File uploaded successfully');
+      getDownloadURL(snapshot.ref).then((url) => {
+        console.log('File available at', url);
+        setPdfUrl(url);
+      }).then(() => {
+        
+      });
+    });
+  };
 
   async function orc() {
     const worker = await createWorker('eng');
-      const ret = await worker.recognize(file);
+      const ret = await worker.recognize(pdfUrl);
       console.log(ret.data.text);
       await worker.terminate();
   }
