@@ -39,7 +39,7 @@ export default function ApplyModal({ show, setShow, job }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    inputs.job = { id: job.id, location: job.location };
+    inputs.jobid = job.id;
     inputs.applicant = {
       id: user.id,
       email: user.email,

@@ -71,7 +71,14 @@ export default function Jobs() {
             });
             return [];
           }
-          return res.data.data;
+          let appliedJobsIds = user.appliedJobs.map(
+            (application) => application.jobId
+          );
+          console.log(appliedJobsIds);
+          let result = res.data.data.filter(
+            (job) => !appliedJobsIds.includes(job.id)
+          );
+          return result;
         })
         .catch((err) => {
           return [];

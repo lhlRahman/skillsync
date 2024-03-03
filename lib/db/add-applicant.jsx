@@ -1,13 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 
-export default async function AddApplicant(applicant, job) {
+export default async function AddApplicant(applicant, jobid) {
   const prisma = new PrismaClient();
 
-  if (!applicant || !job) {
+  if (!applicant || !jobid) {
     throw new Error("Applicant or job not found");
   }
 
-  if (!applicant.id || !job.id) {
+  if (!applicant.id || !jobid) {
     throw new Error("Applicant or job not found");
   }
 
@@ -19,11 +19,30 @@ export default async function AddApplicant(applicant, job) {
     throw new Error("Applicant note not found");
   }
 
-  if (!job.location) {
-    throw new Error("Job location not found");
-  }
-
   try {
+    // find job with given id
+    const job = await prisma.job.findFirst({
+      where: {
+        id: jobid,
+      },
+    });
+
+    if (!job) {
+      throw new Error("Job not found");
+    }
+
+    if (!job.acceptedApplicants) {
+      throw new Error("Job acceptedApplicants not found");
+    }
+
+    if (job.completed) {
+      throw new Error("Job is already completed");
+    }
+
+    if (job.acceptedApplicants.length >= job.neededApplicants) {
+      throw new Error("Job is already filled");
+    }
+
     // check application already exist in the database for the same job, error will be thrown
     const application = await prisma.application.findFirst({
       where: {

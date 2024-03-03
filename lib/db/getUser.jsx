@@ -9,7 +9,6 @@ export default async function getUser(id) {
     const user = await prisma.user.findUnique({ where: { id: id } });
     return user;
   } catch (error) {
-    console.log("Error occurred while creating event:", error);
     throw error;
   } finally {
     await prisma.$disconnect();

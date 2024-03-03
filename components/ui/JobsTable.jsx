@@ -1,9 +1,17 @@
 // import styles from "../../styles/JobsJobPoster.module.scss";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BentoGrid, BentoGridItem } from "./bento-grid";
+import { useData } from "@/context/DataContext";
 
 export default function JobsTable({ items }) {
+  const { user } = useData();
+  const [appliedJobs, setAppliedJobs] = useState(user.appliedJobs);
+
+  useEffect(() => {
+    if (user.appliedJobs) setAppliedJobs(user.appliedJobs);
+  }, [user]);
+
   return (
     <BentoGrid className="max-w-4xl mx-auto">
       {items.map((item, i) => (
@@ -18,6 +26,7 @@ export default function JobsTable({ items }) {
           neededApplicants={item.neededApplicants}
           acceptedApplicants={item.acceptedApplicants}
           id={item.data.id}
+          appliedJobs={appliedJobs}
         />
       ))}
     </BentoGrid>
