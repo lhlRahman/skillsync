@@ -13,7 +13,7 @@ import {
 import { useData } from "@/context/DataContext";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import axios from "axios";
+export const fetchCache = 'force-no-store';
 
 export default function Jobs() {
   const [originalItems, setOriginalItems] = useState([]);
@@ -98,12 +98,16 @@ export default function Jobs() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'cache-control': 'no-cache',
+            'Cache-Control': fetchCache
           },
           body: JSON.stringify({ id: user.id })
         });
       } else {
-        response = await fetch("/api/jobs");
+        response = await fetch("/api/jobs", {
+          headers: {
+            'Cache-Control': fetchCache
+          }
+        });
       }
   
       if (response.ok) {
@@ -132,7 +136,6 @@ export default function Jobs() {
       setOriginalItems([]);
     }
   };
-
 
 
   const sortBasedOnRerank = async () => {
