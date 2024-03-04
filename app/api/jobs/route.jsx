@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import getJobs from "@/lib/db/get-jobs-query";
+export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
   if (req.method === "GET") {

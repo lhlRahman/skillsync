@@ -13,8 +13,8 @@ import {
 import { useData } from "@/context/DataContext";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import axios from "axios";
-
+export const dynamic = 'force-dynamic';
+const { signal } = new AbortController()
 export default function Jobs() {
   const [originalItems, setOriginalItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
@@ -40,52 +40,96 @@ export default function Jobs() {
     setFilters(filters.filter((f) => f !== filter));
   };
 
+  // const fetchJobs = async () => {
+  //   if (isUserPoster(user)) {
+  //     const response = await axios
+  //       .post("/api/jobs/getAllJobsPosted", { id: user.id })
+  //       .then((res) => {
+  //         if (res.data.status != 201) {
+  //           addAlert({
+  //             message:
+  //               "There was an error fetching jobs. Please reload the page.",
+  //             type: "error",
+  //           });
+  //           return [];
+  //         }
+  //         return res.data.data;
+  //       })
+  //       .catch((err) => {
+  //         return [];
+  //       });
+  //     setOriginalItems(response.map(createItemPoster));
+  //   } else {
+  //     const response = await axios
+  //       .get("/api/jobs")
+  //       .then((res) => {
+  //         if (res.data.status != 201) {
+  //           addAlert({
+  //             message:
+  //               "There was an error fetching jobs. Please reload the page.",
+  //             type: "error",
+  //           });
+  //           return [];
+  //         }
+  //         let appliedJobsIds = user.appliedJobs.map(
+  //           (application) => application.jobId
+  //         );
+  //         console.log(appliedJobsIds);
+  //         let result = res.data.data.filter(
+  //           (job) => !appliedJobsIds.includes(job.id)
+  //         );
+  //         return result;
+  //       })
+  //       .catch((err) => {
+  //         return [];
+  //       });
+  //     setOriginalItems(response.map(createItemPoster));
+  //   }
+  // };
+
   const fetchJobs = async () => {
-    if (isUserPoster(user)) {
-      const response = await axios
-        .post("/api/jobs/getAllJobsPosted", { id: user.id })
-        .then((res) => {
-          if (res.data.status != 201) {
-            addAlert({
-              message:
-                "There was an error fetching jobs. Please reload the page.",
-              type: "error",
-            });
-            return [];
-          }
-          return res.data.data;
-        })
-        .catch((err) => {
-          return [];
+    try {
+      if (isUserPoster(user)) {
+        const response = await fetch("/api/jobs/getAllJobsPosted", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: user.id })
         });
-      setOriginalItems(response.map(createItemPoster));
-    } else {
-      const response = await axios
-        .get("/api/jobs")
-        .then((res) => {
-          if (res.data.status != 201) {
-            addAlert({
-              message:
-                "There was an error fetching jobs. Please reload the page.",
-              type: "error",
-            });
-            return [];
-          }
-          let appliedJobsIds = user.appliedJobs.map(
-            (application) => application.jobId
-          );
-          console.log(appliedJobsIds);
-          let result = res.data.data.filter(
-            (job) => !appliedJobsIds.includes(job.id)
-          );
-          return result;
-        })
-        .catch((err) => {
-          return [];
-        });
-      setOriginalItems(response.map(createItemPoster));
+  
+        const data = await response.json();
+  
+        if (data.status != 201) {
+          addAlert({
+            message: "There was an error fetching jobs. Please reload the page.",
+            type: "error",
+          });
+          setOriginalItems([]);
+        } else {
+          setOriginalItems(data.data.map(createItemPoster));
+        }
+      } else {
+        const response = await fetch("/api/jobs", { signal });
+        const data = await response.json();
+  
+        if (data.status != 201) {
+          addAlert({
+            message: "There was an error fetching jobs. Please reload the page.",
+            type: "error",
+          });
+          setOriginalItems([]);
+        } else {
+          let appliedJobsIds = user.appliedJobs.map((application) => application.jobId);
+          let result = data.data.filter((job) => !appliedJobsIds.includes(job.id));
+          setOriginalItems(result.map(createItemPoster));
+        }
+      }
+    } catch (err) {
+      setOriginalItems([]);
     }
   };
+
 
   const sortBasedOnRerank = async () => {
     if (isUserPoster(user)) return;
