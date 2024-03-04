@@ -4,6 +4,7 @@ import { FloatingNav } from "@/components/Navbar";
 import "./globals.css";
 import { DataProvider } from "@/context/DataContext";
 import AlertWrapper from "@/components/AlertWrapper";
+import { Analytics } from "@vercel/analytics/react"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
             <AlertWrapper />
             <FloatingNav />
             {children}
+            <Analytics/>
           </body>
         </html>
       </DataProvider>
