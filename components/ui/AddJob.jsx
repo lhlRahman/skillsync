@@ -7,6 +7,9 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { autoCompleteAPI, genetatePrompt } from "@/utils/helpers";
 import { useData } from "@/context/DataContext";
 import axios from "axios";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../lib/FirebaseConfig";
+import { v4 as uuidv4 } from 'uuid';
 
 const AddJob = () => {
   const [inputs, setInputs] = useState({});
@@ -21,8 +24,26 @@ const AddJob = () => {
   };
 
   const onFileChange = (e) => {
+    handleImageUpload(e);
     setInputs({ ...inputs, file: e.target.files[0] });
   };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+  const storageRef = ref(storage, `uploads/${uuidv4()}`);
+  uploadBytes(storageRef, file).then((snapshot) => {
+    console.log('File uploaded successfully');
+    getDownloadURL(snapshot.ref).then((url) => {
+      console.log('File available at', url);
+      setInputs({ ...inputs, imageUrl: url });
+    }).catch((error) => {
+      console.error('Error getting download URL', error);
+    });
+  });
+};
+
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -65,9 +86,9 @@ const AddJob = () => {
   return (
     <div className=" flex flex-col justify-center items-center min-h-screen">
       <div className="mt-32  p-2 max-w-4xl w-full bg-white shadow-lg rounded-lg overflow-hidden m-4">
-        {inputs.file && (
+        {inputs.imageUrl && (
           <Image
-            src={URL.createObjectURL(inputs.file)}
+            src={inputs.imageUrl}
             alt="Job Image"
             width={500}
             height={250}
