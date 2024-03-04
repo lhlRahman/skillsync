@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+export const fetchCache = 'force-no-store'
 
 export default async function getAllJobsPosted(id) {
   const prisma = new PrismaClient();
