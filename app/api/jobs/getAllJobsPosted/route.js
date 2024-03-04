@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import getAllJobsPosted from "@/lib/db/get-all-jobs-posted";
-export const fetchCache = 'force-no-store'
+export const dynamic = 'force-dynamic';
 
 // POST /api/days/new
 export async function POST(req) {

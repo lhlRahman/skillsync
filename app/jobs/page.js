@@ -13,8 +13,8 @@ import {
 import { useData } from "@/context/DataContext";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoMdInformationCircleOutline } from "react-icons/io";
-export const fetchCache = 'force-no-store';
-
+export const dynamic = 'force-dynamic';
+const { signal } = new AbortController()
 export default function Jobs() {
   const [originalItems, setOriginalItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
@@ -87,52 +87,45 @@ export default function Jobs() {
   //   }
   // };
 
-
   const fetchJobs = async () => {
     try {
-      let response;
-      let data;
-  
       if (isUserPoster(user)) {
-        response = await fetch("/api/jobs/getAllJobsPosted", {
+        const response = await fetch("/api/jobs/getAllJobsPosted", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Cache-Control': fetchCache
           },
           body: JSON.stringify({ id: user.id })
         });
-      } else {
-        response = await fetch("/api/jobs", {
-          headers: {
-            'Cache-Control': fetchCache
-          }
-        });
-      }
   
-      if (response.ok) {
-        data = await response.json();
-      } else {
-        throw new Error('Network response was not ok.');
-      }
+        const data = await response.json();
   
-      if (data.status != 201) {
-        addAlert({
-          message: "There was an error fetching jobs. Please reload the page.",
-          type: "error",
-        });
-        setOriginalItems([]);
-      } else {
-        if (isUserPoster(user)) {
+        if (data.status != 201) {
+          addAlert({
+            message: "There was an error fetching jobs. Please reload the page.",
+            type: "error",
+          });
+          setOriginalItems([]);
+        } else {
           setOriginalItems(data.data.map(createItemPoster));
+        }
+      } else {
+        const response = await fetch("/api/jobs", { signal });
+        const data = await response.json();
+  
+        if (data.status != 201) {
+          addAlert({
+            message: "There was an error fetching jobs. Please reload the page.",
+            type: "error",
+          });
+          setOriginalItems([]);
         } else {
           let appliedJobsIds = user.appliedJobs.map((application) => application.jobId);
           let result = data.data.filter((job) => !appliedJobsIds.includes(job.id));
           setOriginalItems(result.map(createItemPoster));
         }
       }
-    } catch (error) {
-      console.error('There has been a problem with your fetch operation:', error);
+    } catch (err) {
       setOriginalItems([]);
     }
   };
