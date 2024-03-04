@@ -20,6 +20,9 @@ export default async function createUser(user) {
   if (user.type !== 1 && user.type !== 2) {
     throw new Error("Invalid user type");
   }
+  if (user.type === 1 && !user.bio) {
+    throw new Error("Bio is required");
+  }
   try {
     const newUser = await prisma.user.create({
       data: {
@@ -27,6 +30,7 @@ export default async function createUser(user) {
         firstName: user.firstName,
         lastName: user.lastName,
         type: user.type,
+        bio: user.bio,
         clerkId: user.clerkId,
         createdAt: new Date(),
         updatedAt: new Date(),
