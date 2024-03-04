@@ -3,6 +3,7 @@ import { isUserPoster } from "@/utils/helpers";
 import { useData } from "@/context/DataContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { TbLoader3 } from "react-icons/tb";
 
 const Job = ({ jobid }) => {
   const { setShowModal, setCurJob, user, addAlert } = useData();
@@ -146,12 +147,18 @@ const Job = ({ jobid }) => {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen">
       <div className="mt-32 max-w-4xl w-full bg-white shadow-lg rounded-lg overflow-hidden m-4">
+        {job && job.imageUrl ? (
         <img
           src={job.imageUrl}
           alt="Job Image"
           className="w-full"
           style={{ objectFit: "cover", height: "20rem" }}
         />
+        ) : (
+          <div className="w-full h-80 flex justify-center items-center">
+            <TbLoader3 className="w-20 h-20 animate-spin" />
+          </div>
+        )}
         <div className="p-6">
           <h2 className="font-bold text-2xl mb-2 text-gray-800">{job.title}</h2>
           <div className="text-gray-700">
